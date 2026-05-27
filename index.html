@@ -154,7 +154,6 @@
             padding: 24px;
             box-shadow: 0 4px 20px var(--shadow);
             animation: fadeIn 0.4s ease;
-            /* For swipe gesture */
             touch-action: pan-y;
             user-select: none;
         }
@@ -283,8 +282,8 @@
         .step-item {
             position: relative;
             padding-left: 40px;
-            margin-bottom: 20px; /* 改进：增加行间距 */
-            line-height: 1.8; /* 改进：增加步骤行间距 */
+            margin-bottom: 16px;
+            line-height: 1.7;
         }
         .step-item::before {
             counter-increment: step;
@@ -344,7 +343,6 @@
             background: var(--accent);
             color: white;
         }
-        /* 改进：收藏按钮动画 */
         @keyframes btnPop {
             0% { transform: scale(1); }
             50% { transform: scale(1.2); }
@@ -402,7 +400,7 @@
         }
         .ingredient-tags {
             display: flex;
-            flex-wrap: wrap; /* 改进：确保换行 */
+            flex-wrap: wrap;
             gap: 8px;
             margin-bottom: 16px;
             min-height: 40px;
@@ -475,7 +473,6 @@
             color: white;
             border-color: var(--primary-light);
         }
-        /* 改进：快速按钮点击高亮反馈 */
         @keyframes quickBtnPop {
             0% { transform: scale(1); background: var(--primary); color: white; }
             100% { transform: scale(1); background: var(--primary-light); color: white; }
@@ -500,15 +497,19 @@
             color: var(--primary);
         }
         .change-recipe-btn {
-            padding: 12px 16px;
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: var(--bg);
             border: 2px dashed var(--primary);
-            background: transparent;
-            color: var(--primary);
-            border-radius: var(--radius);
+            border-radius: var(--radius-sm);
             font-size: 14px;
+            font-weight: 500;
+            color: var(--primary);
             cursor: pointer;
             transition: all 0.3s;
             text-align: center;
+            margin-top: 16px;
         }
         .change-recipe-btn:hover {
             background: var(--primary);
@@ -524,7 +525,7 @@
         .fav-item {
             background: var(--bg-card);
             border-radius: var(--radius);
-            padding: 20px; /* 改进：增加点击区域 */
+            padding: 20px;
             display: flex;
             align-items: center;
             gap: 16px;
@@ -570,7 +571,7 @@
         .history-item {
             background: var(--bg-card);
             border-radius: var(--radius);
-            padding: 20px; /* 改进：增加点击区域 */
+            padding: 20px;
             display: flex;
             align-items: center;
             gap: 16px;
@@ -661,12 +662,11 @@
         .empty-text {
             font-size: 16px;
         }
-        /* 改进：空状态引导文字 */
         .empty-hint {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-light);
             margin-top: 8px;
-            opacity: 0.8;
+            opacity: 0.7;
         }
         /* Bottom Navigation */
         .bottom-nav {
@@ -748,7 +748,7 @@
         .mini-recipe-card {
             background: var(--bg-card);
             border-radius: var(--radius);
-            padding: 20px; /* 改进：增加点击区域 */
+            padding: 20px;
             cursor: pointer;
             transition: all 0.3s;
             box-shadow: 0 2px 8px var(--shadow);
@@ -785,90 +785,326 @@
             font-size: 11px;
             font-weight: 600;
         }
-        .swipe-hint {
-            text-align: center;
-            font-size: 12px;
-            color: var(--text-light);
-            margin-top: 12px;
-            opacity: 0.6;
+        /* ===================== */
+        /* Fat Loss Module Styles */
+        /* ===================== */
+        
+        /* User Input Card */
+        .fat-user-input {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 16px var(--shadow);
         }
-        .change-recipe-btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background: var(--bg);
+        .fat-input-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .fat-input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .fat-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .fat-input-group.full-width {
+            grid-column: 1 / -1;
+        }
+        .fat-input-label {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+        .fat-input-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .fat-input {
+            flex: 1;
+            padding: 12px 14px;
             border: 2px solid var(--border);
             border-radius: var(--radius-sm);
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .fat-input:focus {
+            border-color: var(--primary);
+        }
+        .fat-input-unit {
             font-size: 14px;
-            font-weight: 500;
-            color: var(--text);
+            color: var(--text-light);
+        }
+        .fat-select {
+            flex: 1;
+            padding: 12px 14px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            outline: none;
+            background: white;
             cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-            margin-top: 16px;
+            transition: border-color 0.3s;
         }
-        .change-recipe-btn:hover {
-            background: var(--primary-light);
+        .fat-select:focus {
+            border-color: var(--primary);
+        }
+        .fat-calc-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
-            border-color: var(--primary-light);
-        }
-        .fridge-input-row {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        .clear-all-btn {
-            padding: 8px 14px;
-            background: #FFEBEE;
-            color: var(--accent);
             border: none;
             border-radius: var(--radius-sm);
-            font-size: 13px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            white-space: nowrap;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+        .fat-calc-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 16px var(--shadow);
+        }
+        
+        /* Results Card */
+        .fat-results {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        .fat-results.show {
+            display: block;
+        }
+        .fat-result-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 16px var(--shadow);
+        }
+        .fat-result-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .fat-data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .fat-data-item {
+            text-align: center;
+            padding: 16px 12px;
+            background: var(--bg);
+            border-radius: var(--radius-sm);
+        }
+        .fat-data-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .fat-data-label {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        .fat-data-item.bmi-under { background: #E8F5E9; }
+        .fat-data-item.bmi-normal { background: #E8F5E9; }
+        .fat-data-item.bmi-over { background: #FFF3E0; }
+        .fat-data-item.bmi-obese { background: #FFEBEE; }
+        .fat-data-value.bmi-green { color: #2E7D32; }
+        .fat-data-value.bmi-orange { color: #E65100; }
+        .fat-data-value.bmi-red { color: #C62828; }
+        
+        /* Meal Recommendation Cards */
+        .fat-meal-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px var(--shadow);
+            cursor: pointer;
             transition: all 0.3s;
         }
-        .clear-all-btn:hover {
-            background: #FFCDD2;
+        .fat-meal-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 16px var(--shadow);
         }
-        .empty-hint {
-            font-size: 13px;
+        .fat-meal-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        .fat-meal-emoji {
+            font-size: 28px;
+        }
+        .fat-meal-info {
+            flex: 1;
+        }
+        .fat-meal-type {
+            font-size: 12px;
             color: var(--text-light);
-            margin-top: 8px;
-            opacity: 0.7;
         }
-        .just-added {
-            animation: quickPulse 0.3s ease;
+        .fat-meal-name {
+            font-size: 15px;
+            font-weight: 600;
         }
-        @keyframes quickPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); background: var(--primary); color: white; border-color: var(--primary); }
-            100% { transform: scale(1); }
+        .fat-meal-cal {
+            padding: 4px 10px;
+            background: #FFF3E0;
+            color: #E65100;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
         }
-        .animate-pop {
-            animation: pop 0.4s ease;
+        .fat-meal-ingredients {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 4px;
         }
-        .animate-shake {
-            animation: shake 0.4s ease;
+        
+        /* Exercise Card */
+        .fat-exercise-card {
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            color: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3);
         }
-        @keyframes pop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-            100% { transform: scale(1); }
+        .fat-exercise-card.obese {
+            background: linear-gradient(135deg, #FF7043 0%, #FFA726 100%);
+            box-shadow: 0 4px 16px rgba(255, 112, 67, 0.3);
         }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-4px); }
-            75% { transform: translateX(4px); }
+        .fat-exercise-card.underweight {
+            background: linear-gradient(135deg, #42A5F5 0%, #66BB6A 100%);
+            box-shadow: 0 4px 16px rgba(66, 165, 245, 0.3);
         }
-        .swiping {
-            transition: none;
+        .fat-exercise-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .swiped {
-            animation: swipeOut 0.2s ease forwards;
+        .fat-exercise-list {
+            list-style: none;
         }
-        @keyframes swipeOut {
-            to { transform: translateX(-100%); opacity: 0; }
+        .fat-exercise-item {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 14px;
+        }
+        .fat-exercise-item:last-child {
+            border-bottom: none;
+        }
+        .fat-exercise-icon {
+            font-size: 16px;
+            margin-top: 2px;
+        }
+        .fat-exercise-burn {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-top: 12px;
+            text-align: center;
+        }
+        
+        /* Water Tracker */
+        .fat-water-card {
+            background: linear-gradient(135deg, #0288D1 0%, #03A9F4 100%);
+            color: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 16px rgba(2, 136, 209, 0.3);
+        }
+        .fat-water-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .fat-water-goal {
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .fat-water-progress {
+            background: rgba(255,255,255,0.2);
+            height: 16px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+        .fat-water-progress-bar {
+            height: 100%;
+            background: white;
+            border-radius: 8px;
+            transition: width 0.3s ease;
+        }
+        .fat-water-btn {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.4);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .fat-water-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .fat-water-btn:active {
+            transform: scale(0.98);
+        }
+        .fat-water-reset {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        /* Section divider */
+        .fat-section-divider {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-light);
+            margin: 20px 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .fat-section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
         }
     </style>
 </head>
@@ -879,10 +1115,12 @@
             <p>懒人菜谱，帮你解决选择困难</p>
         </div>
     </header>
+
     <div class="nav-tabs">
         <button class="nav-tab active" data-tab="home">随机推荐</button>
         <button class="nav-tab" data-tab="fridge">冰箱模式</button>
     </div>
+
     <main class="container">
         <!-- Home Section -->
         <section id="home" class="section active">
@@ -898,6 +1136,7 @@
                     <div class="entry-desc">输入家里有的食材，智能推荐菜谱</div>
                 </div>
             </div>
+
             <div id="recipeView" class="recipe-result">
                 <button class="back-btn" onclick="goHome()">
                     ← 返回
@@ -905,6 +1144,7 @@
                 <div id="recipeCard" class="recipe-card"></div>
             </div>
         </section>
+
         <!-- Fridge Section -->
         <section id="fridge" class="section">
             <div class="fridge-input">
@@ -925,6 +1165,7 @@
                     <button class="quick-btn" onclick="addQuickIngredient('面条')">🍝 面条</button>
                 </div>
             </div>
+
             <div class="fridge-results" id="fridgeResults">
                 <div class="empty-state">
                     <div class="empty-icon">🥗</div>
@@ -933,6 +1174,102 @@
                 </div>
             </div>
         </section>
+
+        <!-- Fat Loss Section -->
+        <section id="fatloss" class="section">
+            <div class="fat-user-input">
+                <div class="fat-input-title">📊 身体数据</div>
+                <div class="fat-input-grid">
+                    <div class="fat-input-group">
+                        <span class="fat-input-label">身高 (cm)</span>
+                        <div class="fat-input-row">
+                            <input type="number" id="fatHeight" class="fat-input" placeholder="170" min="100" max="250">
+                            <span class="fat-input-unit">cm</span>
+                        </div>
+                    </div>
+                    <div class="fat-input-group">
+                        <span class="fat-input-label">体重 (kg)</span>
+                        <div class="fat-input-row">
+                            <input type="number" id="fatWeight" class="fat-input" placeholder="65" min="30" max="200" step="0.1">
+                            <span class="fat-input-unit">kg</span>
+                        </div>
+                    </div>
+                    <div class="fat-input-group">
+                        <span class="fat-input-label">目标体重 (kg)</span>
+                        <div class="fat-input-row">
+                            <input type="number" id="fatGoal" class="fat-input" placeholder="60" min="30" max="200" step="0.1">
+                            <span class="fat-input-unit">kg</span>
+                        </div>
+                    </div>
+                    <div class="fat-input-group">
+                        <span class="fat-input-label">家里几口人</span>
+                        <select id="fatPeople" class="fat-select">
+                            <option value="1">1人</option>
+                            <option value="2">2人</option>
+                            <option value="3">3人</option>
+                            <option value="4">4人</option>
+                            <option value="5">5人</option>
+                            <option value="6">6人</option>
+                            <option value="7">7人</option>
+                            <option value="8">8人</option>
+                            <option value="9">9人</option>
+                            <option value="10">10人</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="fat-calc-btn" onclick="calculateFatLoss()">💪 开始计算</button>
+            </div>
+
+            <div id="fatResults" class="fat-results">
+                <!-- BMI and TDEE Results -->
+                <div class="fat-result-card">
+                    <div class="fat-result-title">📈 身体指标</div>
+                    <div class="fat-data-grid">
+                        <div class="fat-data-item" id="bmiCard">
+                            <div class="fat-data-value" id="bmiValue">--</div>
+                            <div class="fat-data-label">BMI 体质指数</div>
+                        </div>
+                        <div class="fat-data-item">
+                            <div class="fat-data-value" id="tdeeValue">--</div>
+                            <div class="fat-data-label">每日所需 (kcal)</div>
+                        </div>
+                        <div class="fat-data-item">
+                            <div class="fat-data-value" id="targetCalValue">--</div>
+                            <div class="fat-data-label">每日推荐摄入</div>
+                        </div>
+                        <div class="fat-data-item">
+                            <div class="fat-data-value" id="weeksValue">--</div>
+                            <div class="fat-data-label">预计达成 (周)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Meal Recommendations -->
+                <div class="fat-section-divider">🍽️ 今日减脂餐推荐</div>
+                <div id="fatMealList"></div>
+
+                <!-- Exercise Suggestions -->
+                <div class="fat-section-divider">🏃 运动建议</div>
+                <div id="fatExerciseCard"></div>
+
+                <!-- Water Tracker -->
+                <div class="fat-section-divider">💧 喝水追踪</div>
+                <div class="fat-water-card">
+                    <div class="fat-water-title">💧 今日饮水</div>
+                    <div class="fat-water-goal">
+                        <span id="waterCurrent">0</span> / <span id="waterGoal">8</span> 杯
+                    </div>
+                    <div class="fat-water-progress">
+                        <div class="fat-water-progress-bar" id="waterProgressBar" style="width: 0%"></div>
+                    </div>
+                    <button class="fat-water-btn" id="waterBtn" onclick="addWater()">
+                        🥤 我喝了一杯
+                    </button>
+                    <div class="fat-water-reset" id="waterResetHint">明天记得重新开始哦</div>
+                </div>
+            </div>
+        </section>
+
         <!-- Favorites Section -->
         <section id="favorites" class="section">
             <h2 style="font-size: 20px; margin-bottom: 16px;">我的收藏</h2>
@@ -944,6 +1281,7 @@
                 </div>
             </div>
         </section>
+
         <!-- History Section -->
         <section id="history" class="section">
             <h2 style="font-size: 20px; margin-bottom: 16px;">历史记录</h2>
@@ -955,6 +1293,7 @@
                 </div>
             </div>
         </section>
+
         <!-- Settings Section -->
         <section id="settings" class="section">
             <h2 style="font-size: 20px; margin-bottom: 16px;">口味偏好</h2>
@@ -968,16 +1307,22 @@
                     <button class="toggle-option" data-pref="lowCal" onclick="togglePreference('lowCal')">💪 减脂</button>
                 </div>
             </div>
+
             <div class="settings-group">
                 <div class="settings-title">数据管理</div>
                 <button class="clear-data-btn" onclick="clearAllData()">清除所有数据</button>
             </div>
         </section>
     </main>
+
     <nav class="bottom-nav">
         <button class="nav-item active" data-tab="home" onclick="switchMainTab('home')">
             <span class="nav-icon">🏠</span>
             <span>首页</span>
+        </button>
+        <button class="nav-item" data-tab="fatloss" onclick="switchMainTab('fatloss')">
+            <span class="nav-icon">💪</span>
+            <span>减脂</span>
         </button>
         <button class="nav-item" data-tab="favorites" onclick="switchMainTab('favorites')">
             <span class="nav-icon">❤️</span>
@@ -992,1094 +1337,67 @@
             <span>设置</span>
         </button>
     </nav>
+
     <div class="toast" id="toast"></div>
+
     <script>
-        // 50+ 菜谱数据库
+        // 55道菜谱数据库
         const recipes = [
-            {
-                id: 1,
-                name: "番茄炒蛋",
-                emoji: "🍳",
-                difficulty: "easy",
-                time: "10分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: false,
-                light: true,
-                ingredients: ["鸡蛋", "番茄", "葱", "盐", "油"],
-                steps: [
-                    "番茄洗净切块，鸡蛋打散加少许盐搅匀",
-                    "热锅冷油，倒入蛋液炒至凝固后盛出",
-                    "锅中再加少许油，放入番茄块翻炒出汁",
-                    "加入炒好的鸡蛋，加盐调味",
-                    "撒上葱花即可出锅"
-                ]
-            },
-            {
-                id: 2,
-                name: "可乐鸡翅",
-                emoji: "🍗",
-                difficulty: "medium",
-                time: "30分钟",
-                spicy: false,
-                vegetarian: false,
-                lowCal: false,
-                light: false,
-                ingredients: ["鸡翅", "可乐", "生抽", "姜", "葱", "料酒"],
-                steps: [
-                    "鸡翅洗净，两面划几刀方便入味",
-                    "冷水下锅焯水，加料酒去腥，捞出沥干",
-                    "锅中少许油，将鸡翅煎至两面金黄",
-                    "加入可乐、生抽、姜片、葱段",
-                    "大火烧开转小火焖煮20分钟",
-                    "大火收汁，汤汁浓稠即可出锅"
-                ]
-            },
-            {
-                id: 3,
-                name: "酸辣土豆丝",
-                emoji: "🥔",
-                difficulty: "easy",
-                time: "15分钟",
-                spicy: true,
-                vegetarian: true,
-                lowCal: true,
-                light: false,
-                ingredients: ["土豆", "干辣椒", "醋", "盐", "葱", "蒜"],
-                steps: [
-                    "土豆去皮切成细丝，用清水浸泡去除淀粉",
-                    "锅中烧开水，将土豆丝焯水30秒捞出过凉水",
-                    "锅中少许油，爆香蒜片和干辣椒",
-                    "倒入土豆丝大火快炒",
-                    "加醋、盐调味，翻炒均匀即可"
-                ]
-            },
-            {
-                id: 4,
-                name: "红烧肉",
-                emoji: "🥩",
-                difficulty: "medium",
-                time: "60分钟",
-                spicy: false,
-                vegetarian: false,
-                lowCal: false,
-                light: false,
-                ingredients: ["五花肉", "冰糖", "生抽", "老抽", "料酒", "姜", "八角", "桂皮"],
-                steps: [
-                    "五花肉切成3厘米见方的块",
-                    "冷水下锅焯水，撇去浮沫后捞出",
-                    "锅中少许油，放入冰糖小火炒至焦糖色",
-                    "下入肉块翻炒上色，加料酒、生抽、老抽",
-                    "加入足量开水没过肉块，放入姜、八角、桂皮",
-                    "大火烧开转小火炖1小时",
-                    "大火收汁，汤汁浓稠即可"
-                ]
-            },
-            {
-                id: 5,
-                name: "蒜蓉西兰花",
-                emoji: "🥦",
-                difficulty: "easy",
-                time: "10分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: true,
-                light: true,
-                ingredients: ["西兰花", "蒜", "盐", "蚝油", "油"],
-                steps: [
-                    "西兰花掰成小朵，洗净备用",
-                    "烧开水，加少许盐和油，放入西兰花焯水1分钟",
-                    "捞出过凉水保持翠绿，沥干备用",
-                    "锅中少许油，爆香蒜末",
-                    "倒入西兰花快速翻炒，加蚝油和盐调味即可"
-                ]
-            },
-            {
-                id: 6,
-                name: "宫保鸡丁",
-                emoji: "🍛",
-                difficulty: "medium",
-                time: "20分钟",
-                spicy: true,
-                vegetarian: false,
-                lowCal: false,
-                light: false,
-                ingredients: ["鸡胸肉", "花生米", "干辣椒", "花椒", "黄瓜", "葱", "姜", "蒜", "生抽", "醋", "糖", "淀粉"],
-                steps: [
-                    "鸡胸肉切丁，加盐、料酒、淀粉抓匀腌制15分钟",
-                    "调酱汁：生抽、醋、糖、淀粉、水拌匀",
-                    "花生米炸至金黄酥脆备用",
-                    "热锅宽油，下鸡丁滑炒至变色盛出",
-                    "锅中留底油，爆香干辣椒、花椒、葱姜蒜",
-                    "下鸡丁和黄瓜丁，倒入酱汁快速翻炒",
-                    "出锅前撒入花生米即可"
-                ]
-            },
-            {
-                id: 7,
-                name: "麻婆豆腐",
-                emoji: "🧈",
-                difficulty: "easy",
-                time: "15分钟",
-                spicy: true,
-                vegetarian: true,
-                lowCal: false,
-                light: false,
-                ingredients: ["豆腐", "肉末", "豆瓣酱", "花椒粉", "葱", "姜", "蒜", "生抽", "淀粉"],
-                steps: [
-                    "豆腐切2厘米见方的块，放入淡盐水中浸泡去豆腥",
-                    "锅中少许油，下肉末炒散至变色",
-                    "加入豆瓣酱、葱姜蒜末炒出红油",
-                    "加入适量清水，放入豆腐块轻轻推动",
-                    "加生抽调味，小火煮5分钟入味",
-                    "水淀粉勾芡，出锅撒花椒粉和葱花"
-                ]
-            },
-            {
-                id: 8,
-                name: "清蒸鲈鱼",
-                emoji: "🐟",
-                difficulty: "medium",
-                time: "25分钟",
-                spicy: false,
-                vegetarian: false,
-                lowCal: true,
-                light: true,
-                ingredients: ["鲈鱼", "葱", "姜", "蒸鱼豉油", "料酒", "红椒"],
-                steps: [
-                    "鲈鱼处理干净，两面划几刀，抹上料酒和盐腌制10分钟",
-                    "盘底铺上葱段和姜片，放上鲈鱼",
-                    "水开后放入蒸锅，大火蒸8-10分钟",
-                    "取出倒掉蒸出的水，铺上葱丝和红椒丝",
-                    "淋上蒸鱼豉油，浇上热油激发香味即可"
-                ]
-            },
-            {
-                id: 9,
-                name: "蛋炒饭",
-                emoji: "🍚",
-                difficulty: "easy",
-                time: "10分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: false,
-                light: false,
-                ingredients: ["米饭", "鸡蛋", "葱", "盐", "生抽", "油"],
-                steps: [
-                    "准备隔夜米饭，用手抓散备用",
-                    "鸡蛋打散，可以先把蛋液拌入米饭中",
-                    "锅中宽油烧热，下米饭大火翻炒",
-                    "炒至米饭粒粒分明，蛋液凝固",
-                    "加盐和少许生抽调味",
-                    "撒上葱花翻炒均匀即可出锅"
-                ]
-            },
-            {
-                id: 10,
-                name: "酸辣汤",
-                emoji: "🍲",
-                difficulty: "easy",
-                time: "15分钟",
-                spicy: true,
-                vegetarian: false,
-                lowCal: true,
-                light: false,
-                ingredients: ["豆腐", "木耳", "金针菇", "番茄", "鸡蛋", "醋", "生抽", "胡椒粉", "淀粉", "葱"],
-                steps: [
-                    "所有食材切成细丝备用",
-                    "锅中加水烧开，放入豆腐丝、木耳丝、金针菇",
-                    "煮开后加入番茄丝继续煮2分钟",
-                    "水淀粉勾芡至汤汁浓稠",
-                    "蛋液打散淋入锅中形成蛋花",
-                    "加醋、生抽、胡椒粉调味，撒葱花出锅"
-                ]
-            },
-            {
-                id: 11,
-                name: "糖醋里脊",
-                emoji: "🍖",
-                difficulty: "medium",
-                time: "30分钟",
-                spicy: false,
-                vegetarian: false,
-                lowCal: false,
-                light: false,
-                ingredients: ["猪里脊", "番茄酱", "醋", "糖", "淀粉", "鸡蛋", "白芝麻"],
-                steps: [
-                    "里脊肉切条，加盐、料酒、蛋清腌制15分钟",
-                    "裹上干淀粉，油温170度炸至金黄捞出",
-                    "复炸一次至酥脆备用",
-                    "调糖醋汁：番茄酱、醋、糖、水淀粉拌匀",
-                    "锅中少许油，倒入糖醋汁烧开",
-                    "下里脊肉快速翻炒，裹匀酱汁",
-                    "撒白芝麻即可出锅"
-                ]
-            },
-            {
-                id: 12,
-                name: "地三鲜",
-                emoji: "🍆",
-                difficulty: "medium",
-                time: "25分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: false,
-                light: false,
-                ingredients: ["茄子", "土豆", "青椒", "葱", "蒜", "生抽", "蚝油", "糖", "淀粉"],
-                steps: [
-                    "茄子、土豆切滚刀块，青椒切块",
-                    "茄子块加盐腌制10分钟，挤去水分",
-                    "分别将土豆、茄子、青椒过油炸至微黄捞出",
-                    "锅中留底油，爆香葱蒜末",
-                    "倒入炸好的三样食材，加生抽、蚝油、糖调味",
-                    "快速翻炒均匀，水淀粉勾薄芡即可"
-                ]
-            },
-            {
-                id: 13,
-                name: "鱼香肉丝",
-                emoji: "🥢",
-                difficulty: "medium",
-                time: "25分钟",
-                spicy: true,
-                vegetarian: false,
-                lowCal: false,
-                light: false,
-                ingredients: ["猪里脊", "木耳", "胡萝卜", "青椒", "泡椒", "葱", "姜", "蒜", "醋", "糖", "生抽", "淀粉"],
-                steps: [
-                    "里脊肉切丝，加盐、料酒、淀粉抓匀腌制",
-                    "木耳、胡萝卜、青椒切丝备用",
-                    "调鱼香汁：醋、糖、生抽、淀粉、水拌匀",
-                    "热锅宽油，下肉丝滑炒至变色盛出",
-                    "锅中留底油，爆香泡椒、葱姜蒜",
-                    "下配菜翻炒，倒回肉丝，淋入鱼香汁",
-                    "大火快速翻炒均匀即可出锅"
-                ]
-            },
-            {
-                id: 14,
-                name: "蒜蓉粉丝蒸虾",
-                emoji: "🦐",
-                difficulty: "medium",
-                time: "20分钟",
-                spicy: false,
-                vegetarian: false,
-                lowCal: true,
-                light: true,
-                ingredients: ["大虾", "粉丝", "蒜", "葱", "蒸鱼豉油", "料酒"],
-                steps: [
-                    "粉丝泡软铺在盘底",
-                    "大虾去头开背，去虾线，铺在粉丝上",
-                    "蒜末炒香，加蒸鱼豉油拌匀",
-                    "将蒜蓉酱铺在虾背上",
-                    "水开后放入蒸锅，大火蒸6-8分钟",
-                    "出锅撒葱花，淋热油即可"
-                ]
-            },
-            {
-                id: 15,
-                name: "凉拌黄瓜",
-                emoji: "🥒",
-                difficulty: "easy",
-                time: "10分钟",
-                spicy: true,
-                vegetarian: true,
-                lowCal: true,
-                light: true,
-                ingredients: ["黄瓜", "蒜", "小米辣", "醋", "生抽", "香油", "盐", "糖"],
-                steps: [
-                    "黄瓜用刀拍碎，切成小段",
-                    "蒜切末，小米辣切圈",
-                    "黄瓜中加入蒜末、小米辣",
-                    "加醋、生抽、香油、盐、糖调味",
-                    "拌匀后放入冰箱冷藏10分钟更入味"
-                ]
-            },
-            {
-                id: 16,
-                name: "红烧茄子",
-                emoji: "🍆",
-                difficulty: "easy",
-                time: "20分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: false,
-                light: false,
-                ingredients: ["茄子", "葱", "蒜", "豆瓣酱", "生抽", "老抽", "糖", "淀粉"],
-                steps: [
-                    "茄子切滚刀块，加盐腌制10分钟",
-                    "挤去水分，裹上干淀粉",
-                    "油温180度，将茄子炸至金黄捞出",
-                    "锅中留底油，爆香葱蒜末和豆瓣酱",
-                    "加水、生抽、老抽、糖烧开",
-                    "下茄子块煮2分钟，水淀粉勾芡即可"
-                ]
-            },
-            {
-                id: 17,
-                name: "冬瓜排骨汤",
-                emoji: "🍲",
-                difficulty: "medium",
-                time: "90分钟",
-                spicy: false,
-                vegetarian: false,
-                lowCal: true,
-                light: true,
-                ingredients: ["排骨", "冬瓜", "姜", "葱", "料酒", "盐"],
-                steps: [
-                    "排骨剁块，冷水下锅焯水去血沫",
-                    "冬瓜去皮切块备用",
-                    "锅中加水，放入排骨、姜片、葱段、料酒",
-                    "大火烧开转小火炖60分钟",
-                    "加入冬瓜块再炖20分钟",
-                    "加盐调味，撒葱花即可"
-                ]
-            },
-            {
-                id: 18,
-                name: "干煸四季豆",
-                emoji: "🫛",
-                difficulty: "easy",
-                time: "15分钟",
-                spicy: true,
-                vegetarian: true,
-                lowCal: true,
-                light: false,
-                ingredients: ["四季豆", "干辣椒", "花椒", "蒜", "芽菜", "盐", "生抽"],
-                steps: [
-                    "四季豆去头尾和老筋，掰成段",
-                    "油温170度，将四季豆炸至虎皮状捞出",
-                    "锅中留底油，爆香干辣椒、花椒、蒜末",
-                    "下四季豆翻炒，加芽菜、生抽、盐调味",
-                    "炒至四季豆完全熟透即可出锅"
-                ]
-            },
-            {
-                id: 19,
-                name: "葱油饼",
-                emoji: "🫓",
-                difficulty: "medium",
-                time: "40分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: false,
-                light: false,
-                ingredients: ["面粉", "葱", "盐", "油", "开水"],
-                steps: [
-                    "面粉加开水揉成光滑面团，醒发20分钟",
-                    "葱切葱花，加盐和热油做成葱油酥",
-                    "面团擀成薄片，涂上葱油酥",
-                    "卷起后盘成圆形，再次擀薄",
-                    "平底锅少许油，小火煎至两面金黄",
-                    "出锅切块即可享用"
-                ]
-            },
-            {
-                id: 20,
-                name: "香菇炒青菜",
-                emoji: "🥬",
-                difficulty: "easy",
-                time: "10分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: true,
-                light: true,
-                ingredients: ["青菜", "香菇", "蒜", "盐", "蚝油", "油"],
-                steps: [
-                    "香菇切片，青菜洗净备用",
-                    "锅中烧开水，加少许盐和油",
-                    "放入青菜焯水30秒，捞出过凉水",
-                    "锅中少许油，爆香蒜片",
-                    "下香菇片翻炒至软",
-                    "加入青菜，加蚝油和盐调味翻炒均匀"
-                ]
-            },
-            {
-                id: 21,
-                name: "水煮牛肉",
-                emoji: "🥩",
-                difficulty: "medium",
-                time: "30分钟",
-                spicy: true,
-                vegetarian: false,
-                lowCal: true,
-                light: false,
-                ingredients: ["牛肉", "豆芽", "莴笋", "干辣椒", "花椒", "豆瓣酱", "葱", "姜", "蒜", "淀粉", "盐"],
-                steps: [
-                    "牛肉逆纹切薄片，加盐、料酒、淀粉抓匀腌制",
-                    "豆芽、莴笋焯水铺在碗底",
-                    "锅中少许油，爆香豆瓣酱、干辣椒、花椒",
-                    "加高汤或水烧开，调味后下牛肉片",
-                    "煮至变色连汤倒入碗中",
-                    "表面撒蒜末、葱花、干辣椒，淋热油即可"
-                ]
-            },
-            {
-                id: 22,
-                name: "蒜香面包",
-                emoji: "🍞",
-                difficulty: "easy",
-                time: "20分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: false,
-                light: false,
-                ingredients: ["法棍", "黄油", "蒜", "葱", "盐", "欧芹碎"],
-                steps: [
-                    "法棍斜切成厚片",
-                    "黄油软化，加入蒜末、葱末、盐拌匀",
-                    "将蒜香黄油涂抹在面包片上",
-                    "烤箱180度预热，烤8-10分钟至金黄",
-                    "出炉撒欧芹碎即可"
-                ]
-            },
-            {
-                id: 23,
-                name: "泡面",
-                emoji: "🍜",
-                difficulty: "easy",
-                time: "10分钟",
-                spicy: false,
-                vegetarian: false,
-                lowCal: false,
-                light: false,
-                ingredients: ["泡面", "鸡蛋", "火腿", "青菜", "葱"],
-                steps: [
-                    "锅中烧水，水开放入泡面",
-                    "煮至半软时加入调料包",
-                    "打入鸡蛋，用筷子搅散形成蛋花",
-                    "加入火腿片和青菜",
-                    "煮至面条软硬适中，撒葱花出锅"
-                ]
-            },
-            {
-                id: 24,
-                name: "土豆炖牛肉",
-                emoji: "🥘",
-                difficulty: "hard",
-                time: "120分钟",
-                spicy: false,
-                vegetarian: false,
-                lowCal: false,
-                light: false,
-                ingredients: ["牛肉", "土豆", "胡萝卜", "洋葱", "番茄酱", "生抽", "老抽", "料酒", "姜", "八角", "桂皮"],
-                steps: [
-                    "牛肉切块，冷水焯水去血沫",
-                    "土豆、胡萝卜、洋葱切块备用",
-                    "锅中少许油，炒香洋葱、姜片、八角、桂皮",
-                    "下牛肉翻炒，加番茄酱、生抽、老抽、料酒",
-                    "加足量开水，大火烧开转小火炖90分钟",
-                    "加入土豆和胡萝卜再炖20分钟",
-                    "加盐调味，大火收汁即可"
-                ]
-            },
-            {
-                id: 25,
-                name: "红烧排骨",
-                emoji: "🍖",
-                difficulty: "medium",
-                time: "45分钟",
-                spicy: false,
-                vegetarian: false,
-                lowCal: false,
-                light: false,
-                ingredients: ["排骨", "冰糖", "生抽", "老抽", "料酒", "姜", "葱", "八角"],
-                steps: [
-                    "排骨剁小块，冷水焯水去血沫备用",
-                    "锅中少许油，放入冰糖小火炒至焦糖色",
-                    "下排骨翻炒上色，加料酒、生抽、老抽",
-                    "加入足量开水没过排骨，放入姜、八角",
-                    "大火烧开转小火炖30分钟",
-                    "大火收汁，汤汁浓稠即可出锅"
-                ]
-            },
-            {
-                id: 26,
-                name: "手撕包菜",
-                emoji: "🥬",
-                difficulty: "easy",
-                time: "10分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: true,
-                light: true,
-                ingredients: ["圆白菜", "干辣椒", "蒜", "醋", "生抽", "盐", "油"],
-                steps: [
-                    "圆白菜用手撕成大片，洗净沥干",
-                    "锅中少许油，爆香干辣椒和蒜片",
-                    "下包菜大火快炒至断生",
-                    "加醋、生抽、盐调味",
-                    "快速翻炒均匀即可出锅"
-                ]
-            },
-            {
-                id: 27,
-                name: "口水鸡",
-                emoji: "🍗",
-                difficulty: "medium",
-                time: "35分钟",
-                spicy: true,
-                vegetarian: false,
-                lowCal: true,
-                light: false,
-                ingredients: ["鸡腿", "花生碎", "芝麻", "葱", "姜", "蒜", "花椒粉", "辣椒油", "生抽", "醋", "糖"],
-                steps: [
-                    "鸡腿冷水下锅，加姜片料酒煮熟",
-                    "煮熟后捞出放凉，剁成块摆盘",
-                    "调口水汁：蒜末、花椒粉、辣椒油、生抽、醋、糖拌匀",
-                    "将口水汁淋在鸡块上",
-                    "撒花生碎和芝麻即可"
-                ]
-            },
-            {
-                id: 28,
-                name: "青椒炒肉丝",
-                emoji: "🥩",
-                difficulty: "easy",
-                time: "15分钟",
-                spicy: false,
-                vegetarian: false,
-                lowCal: false,
-                light: false,
-                ingredients: ["猪里脊", "青椒", "姜", "蒜", "生抽", "料酒", "淀粉", "盐"],
-                steps: [
-                    "里脊肉切丝，加盐、料酒、淀粉抓匀腌制",
-                    "青椒去籽切丝备用",
-                    "热锅宽油，下肉丝滑炒至变色盛出",
-                    "锅中留底油，爆香姜蒜末",
-                    "下青椒丝翻炒至断生，倒回肉丝",
-                    "加生抽和盐调味，翻炒均匀即可"
-                ]
-            },
-            {
-                id: 29,
-                name: "丝瓜炒蛋",
-                emoji: "🥚",
-                difficulty: "easy",
-                time: "15分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: true,
-                light: true,
-                ingredients: ["丝瓜", "鸡蛋", "蒜", "盐", "油"],
-                steps: [
-                    "丝瓜去皮切成滚刀块",
-                    "鸡蛋打散加少许盐搅匀",
-                    "锅中宽油，倒入蛋液炒至凝固盛出",
-                    "锅中再加少许油，爆香蒜末",
-                    "下丝瓜翻炒至软，加盐调味",
-                    "倒回鸡蛋翻炒均匀即可"
-                ]
-            },
-            {
-                id: 30,
-                name: "凉拌木耳",
-                emoji: "🌿",
-                difficulty: "easy",
-                time: "15分钟",
-                spicy: true,
-                vegetarian: true,
-                lowCal: true,
-                light: true,
-                ingredients: ["木耳", "蒜", "小米辣", "葱", "醋", "生抽", "香油", "盐", "糖"],
-                steps: [
-                    "干木耳提前泡发，撕成小朵",
-                    "锅中烧开水，将木耳焯水2分钟捞出",
-                    "过凉水沥干备用",
-                    "蒜末、葱末、小米辣圈放入碗中",
-                    "加醋、生抽、香油、盐、糖调成汁",
-                    "木耳拌入调料即可享用"
-                ]
-            },
-            {
-                id: 31,
-                name: "蒸蛋羹",
-                emoji: "🍳",
-                difficulty: "easy",
-                time: "20分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: true,
-                light: true,
-                ingredients: ["鸡蛋", "温水", "盐", "生抽", "香油", "葱"],
-                steps: [
-                    "鸡蛋打散，加入1.5倍温水搅拌均匀",
-                    "加少许盐调味，过筛去泡沫",
-                    "盖上保鲜膜，用牙签扎几个孔",
-                    "水开后放入蒸锅，中火蒸10分钟",
-                    "关火焖5分钟，取出去掉保鲜膜",
-                    "淋生抽、香油，撒葱花即可"
-                ]
-            },
-            {
-                id: 32,
-                name: "回锅肉",
-                emoji: "🥓",
-                difficulty: "medium",
-                time: "30分钟",
-                spicy: true,
-                vegetarian: false,
-                lowCal: false,
-                light: false,
-                ingredients: ["五花肉", "青蒜", "郫县豆瓣酱", "甜面酱", "姜", "蒜", "料酒", "糖"],
-                steps: [
-                    "五花肉整块冷水下锅，加姜片料酒煮至八分熟",
-                    "捞出放凉切成薄片",
-                    "锅中少许油，下肉片煸炒至出油卷曲",
-                    "加入豆瓣酱、甜面酱炒出红油",
-                    "下青蒜段翻炒，加糖调味",
-                    "炒至青蒜断生即可出锅"
-                ]
-            },
-            {
-                id: 33,
-                name: "酱香饼",
-                emoji: "🫓",
-                difficulty: "medium",
-                time: "35分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: false,
-                light: false,
-                ingredients: ["面粉", "郫县豆瓣酱", "甜面酱", "蒜", "葱", "白芝麻", "油", "糖"],
-                steps: [
-                    "面粉加温水揉成面团，醒发20分钟",
-                    "调酱汁：豆瓣酱、甜面酱、蒜末、糖、水拌匀",
-                    "面团擀薄，刷油，切几刀不切断",
-                    "卷起后再擀成圆饼",
-                    "平底锅少许油，小火煎至两面金黄",
-                    "刷上酱汁，撒葱花和白芝麻，切块即可"
-                ]
-            },
-            {
-                id: 34,
-                name: "紫菜蛋花汤",
-                emoji: "🍵",
-                difficulty: "easy",
-                time: "10分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: true,
-                light: true,
-                ingredients: ["紫菜", "鸡蛋", "虾皮", "葱", "盐", "香油"],
-                steps: [
-                    "紫菜撕成小块，鸡蛋打散",
-                    "锅中烧水，水开后下紫菜和虾皮",
-                    "水淀粉勾薄芡",
-                    "关小火，淋入蛋液形成蛋花",
-                    "加盐调味，撒葱花，淋香油即可"
-                ]
-            },
-            {
-                id: 35,
-                name: "蒜蓉生蚝",
-                emoji: "🦪",
-                difficulty: "easy",
-                time: "20分钟",
-                spicy: false,
-                vegetarian: false,
-                lowCal: true,
-                light: true,
-                ingredients: ["生蚝", "蒜", "葱", "小米辣", "蒸鱼豉油", "料酒"],
-                steps: [
-                    "生蚝刷洗干净，撬开备用",
-                    "蒜末炒香，加入蒸鱼豉油和料酒调匀",
-                    "将蒜蓉酱均匀铺在生蚝肉上",
-                    "水开后放入蒸锅，大火蒸5分钟",
-                    "出炉撒葱花和小米辣圈",
-                    "淋少许热油激发香味即可"
-                ]
-            },
-            {
-                id: 36,
-                name: "芝士焗番茄",
-                emoji: "🍅",
-                difficulty: "easy",
-                time: "25分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: false,
-                light: false,
-                ingredients: ["番茄", "马苏里拉芝士", "罗勒", "盐", "黑胡椒", "橄榄油"],
-                steps: [
-                    "番茄洗净，切去顶部挖空内部",
-                    "番茄内部填充切碎的番茄肉，加盐、黑胡椒、罗勒",
-                    "撒上马苏里拉芝士",
-                    "放入预热200度的烤箱，烤15分钟",
-                    "芝士融化金黄即可出炉"
-                ]
-            },
-            {
-                id: 37,
-                name: "酸辣白菜",
-                emoji: "🥬",
-                difficulty: "easy",
-                time: "15分钟",
-                spicy: true,
-                vegetarian: true,
-                lowCal: true,
-                light: false,
-                ingredients: ["白菜", "干辣椒", "花椒", "蒜", "醋", "盐", "糖", "生抽"],
-                steps: [
-                    "白菜切成块，叶子和帮子分开",
-                    "锅中少许油，爆香干辣椒、花椒、蒜片",
-                    "先下白菜帮翻炒至断生",
-                    "再下叶子翻炒，加醋、盐、糖、生抽调味",
-                    "大火快速翻炒均匀即可出锅"
-                ]
-            },
-            {
-                id: 38,
-                name: "腊肠炒饭",
-                emoji: "🍚",
-                difficulty: "easy",
-                time: "15分钟",
-                spicy: false,
-                vegetarian: false,
-                lowCal: false,
-                light: false,
-                ingredients: ["米饭", "腊肠", "鸡蛋", "葱", "盐", "生抽"],
-                steps: [
-                    "腊肠切成小丁，鸡蛋打散",
-                    "锅中少许油，下腊肠丁翻炒出油",
-                    "倒入米饭大火翻炒",
-                    "米饭炒散后淋入蛋液快速翻炒",
-                    "加盐和少许生抽调味",
-                    "撒葱花翻炒均匀即可出锅"
-                ]
-            },
-            {
-                id: 39,
-                name: "可乐饼",
-                emoji: "🥔",
-                difficulty: "medium",
-                time: "40分钟",
-                spicy: false,
-                vegetarian: false,
-                lowCal: false,
-                light: false,
-                ingredients: ["土豆", "猪肉末", "洋葱", "面粉", "鸡蛋", "面包糠", "盐", "黑胡椒", "油"],
-                steps: [
-                    "土豆蒸熟压成泥，洋葱切碎",
-                    "锅中少许油，炒香洋葱和肉末",
-                    "加入土豆泥翻炒，加盐和黑胡椒调味",
-                    "冷却后团成椭圆形，裹面粉、蛋液、面包糠",
-                    "油温170度，炸至金黄酥脆",
-                    "捞出沥油，配番茄酱享用"
-                ]
-            },
-            {
-                id: 40,
-                name: "味噌汤",
-                emoji: "🍲",
-                difficulty: "easy",
-                time: "15分钟",
-                spicy: false,
-                vegetarian: false,
-                lowCal: true,
-                light: true,
-                ingredients: ["内酯豆腐", "海带", "味噌酱", "葱", "木鱼花"],
-                steps: [
-                    "海带提前泡发，和水一起煮开",
-                    "煮5分钟后捞出海带，留下高汤",
-                    "内酯豆腐切成小块放入汤中",
-                    "关火，用少量汤稀释味噌酱后倒入锅中",
-                    "不要煮沸，会破坏味噌的香味",
-                    "盛入碗中，撒木鱼花和葱花即可"
-                ]
-            },
-            {
-                id: 41,
-                name: "椒盐排骨",
-                emoji: "🍖",
-                difficulty: "medium",
-                time: "35分钟",
-                spicy: true,
-                vegetarian: false,
-                lowCal: false,
-                light: false,
-                ingredients: ["排骨", "椒盐粉", "蒜", "姜", "料酒", "淀粉", "油", "葱"],
-                steps: [
-                    "排骨剁小块，加蒜姜汁、料酒、盐腌制30分钟",
-                    "排骨裹上干淀粉",
-                    "油温170度，下排骨炸15分钟捞出",
-                    "复炸一次至外酥里嫩",
-                    "撒上椒盐粉和葱花即可"
-                ]
-            },
-            {
-                id: 42,
-                name: "柠檬鸡",
-                emoji: "🍋",
-                difficulty: "easy",
-                time: "30分钟",
-                spicy: false,
-                vegetarian: false,
-                lowCal: true,
-                light: true,
-                ingredients: ["鸡胸肉", "柠檬", "蒜", "蜂蜜", "生抽", "橄榄油", "盐", "黑胡椒"],
-                steps: [
-                    "鸡胸肉切片，用盐、黑胡椒、柠檬汁腌制15分钟",
-                    "调酱汁：柠檬汁、蜂蜜、生抽、蒜末拌匀",
-                    "锅中少许橄榄油，下鸡片煎至两面金黄",
-                    "倒入酱汁，小火煮至汤汁浓稠",
-                    "鸡片裹满酱汁即可出锅"
-                ]
-            },
-            {
-                id: 43,
-                name: "拍黄瓜",
-                emoji: "🥒",
-                difficulty: "easy",
-                time: "10分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: true,
-                light: true,
-                ingredients: ["黄瓜", "蒜", "醋", "生抽", "香油", "盐", "糖"],
-                steps: [
-                    "黄瓜洗净，用刀背拍碎后切段",
-                    "蒜切末放入碗中",
-                    "加醋、生抽、香油、盐、糖调成汁",
-                    "黄瓜放入碗中，倒入调料拌匀",
-                    "放入冰箱冷藏10分钟更入味"
-                ]
-            },
-            {
-                id: 44,
-                name: "培根金针菇卷",
-                emoji: "🥓",
-                difficulty: "easy",
-                time: "20分钟",
-                spicy: false,
-                vegetarian: false,
-                lowCal: true,
-                light: false,
-                ingredients: ["培根", "金针菇", "牙签", "黑胡椒", "油"],
-                steps: [
-                    "金针菇洗净，撕成小簇",
-                    "培根切成适当长度",
-                    "用培根将金针菇卷起，用牙签固定",
-                    "平底锅少许油，小火煎至培根两面金黄",
-                    "撒黑胡椒即可享用"
-                ]
-            },
-            {
-                id: 45,
-                name: "姜葱炒蟹",
-                emoji: "🦀",
-                difficulty: "medium",
-                time: "25分钟",
-                spicy: false,
-                vegetarian: false,
-                lowCal: true,
-                light: false,
-                ingredients: ["螃蟹", "姜", "葱", "蒜", "料酒", "生抽", "淀粉", "盐", "油"],
-                steps: [
-                    "螃蟹处理干净，剁成块，蟹钳拍裂",
-                    "蟹块裹上薄淀粉",
-                    "油温180度，将蟹块炸至变色捞出",
-                    "锅中留底油，爆香姜葱蒜",
-                    "下蟹块翻炒，加料酒、生抽、盐调味",
-                    "快速翻炒均匀即可出锅"
-                ]
-            },
-            {
-                id: 46,
-                name: "蔬菜沙拉",
-                emoji: "🥗",
-                difficulty: "easy",
-                time: "10分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: true,
-                light: true,
-                ingredients: ["生菜", "番茄", "黄瓜", "玉米粒", "沙拉酱", "黑胡椒", "柠檬汁"],
-                steps: [
-                    "生菜洗净撕成小块",
-                    "番茄切块，黄瓜切片",
-                    "所有蔬菜放入大碗中",
-                    "加入玉米粒",
-                    "淋上沙拉酱，加柠檬汁和黑胡椒拌匀"
-                ]
-            },
-            {
-                id: 47,
-                name: "土豆泥",
-                emoji: "🥔",
-                difficulty: "easy",
-                time: "25分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: false,
-                light: false,
-                ingredients: ["土豆", "黄油", "牛奶", "盐", "黑胡椒", "葱"],
-                steps: [
-                    "土豆去皮切块，蒸熟或煮熟",
-                    "趁热压成细腻的泥",
-                    "加入黄油和温热的牛奶",
-                    "搅拌至顺滑，加盐和黑胡椒调味",
-                    "装盘，撒葱花即可"
-                ]
-            },
-            {
-                id: 48,
-                name: "辣炒花甲",
-                emoji: "🐚",
-                difficulty: "easy",
-                time: "15分钟",
-                spicy: true,
-                vegetarian: false,
-                lowCal: true,
-                light: false,
-                ingredients: ["花甲", "干辣椒", "花椒", "蒜", "姜", "葱", "料酒", "生抽", "盐"],
-                steps: [
-                    "花甲提前用盐水浸泡吐沙",
-                    "冷水下锅焯水，开口后捞出",
-                    "锅中少许油，爆香干辣椒、花椒、蒜姜",
-                    "下花甲大火快炒",
-                    "加料酒、生抽、盐调味",
-                    "撒葱花翻炒均匀即可出锅"
-                ]
-            },
-            {
-                id: 49,
-                name: "南瓜粥",
-                emoji: "🎃",
-                difficulty: "easy",
-                time: "30分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: true,
-                light: true,
-                ingredients: ["南瓜", "大米", "糯米", "冰糖", "牛奶"],
-                steps: [
-                    "南瓜去皮切块，大米和糯米混合洗净",
-                    "南瓜块蒸熟或煮熟",
-                    "加入大米和糯米煮成粥",
-                    "加入蒸熟的南瓜泥继续煮",
-                    "加入冰糖调味",
-                    "出锅前加入少许牛奶增添奶香"
-                ]
-            },
-            {
-                id: 50,
-                name: "凉拌海带丝",
-                emoji: "🌿",
-                difficulty: "easy",
-                time: "15分钟",
-                spicy: true,
-                vegetarian: true,
-                lowCal: true,
-                light: true,
-                ingredients: ["海带", "蒜", "小米辣", "醋", "生抽", "香油", "盐", "糖"],
-                steps: [
-                    "干海带提前泡发，洗净切丝",
-                    "锅中烧开水，将海带丝焯水2分钟",
-                    "捞出过凉水沥干",
-                    "蒜末、小米辣圈放入碗中",
-                    "加醋、生抽、香油、盐、糖调成汁",
-                    "海带丝拌入调料即可"
-                ]
-            },
-            {
-                id: 51,
-                name: "番茄牛腩",
-                emoji: "🍅",
-                difficulty: "hard",
-                time: "120分钟",
-                spicy: false,
-                vegetarian: false,
-                lowCal: false,
-                light: false,
-                ingredients: ["牛腩", "番茄", "洋葱", "姜", "八角", "桂皮", "料酒", "生抽", "老抽", "盐", "糖"],
-                steps: [
-                    "牛腩切块，冷水焯水去血沫",
-                    "番茄切块，洋葱切丝",
-                    "锅中少许油，炒香洋葱、姜片、八角、桂皮",
-                    "下牛腩翻炒，加料酒、生抽、老抽",
-                    "加足量开水，大火烧开转小火炖90分钟",
-                    "加入番茄块再炖20分钟",
-                    "加盐、糖调味，大火收汁即可"
-                ]
-            },
-            {
-                id: 52,
-                name: "燕麦粥",
-                emoji: "🥣",
-                difficulty: "easy",
-                time: "15分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: true,
-                light: true,
-                ingredients: ["燕麦", "牛奶", "蜂蜜", "坚果", "水果"],
-                steps: [
-                    "燕麦片放入锅中",
-                    "加入牛奶和适量水",
-                    "小火煮至燕麦软糯",
-                    "加入蜂蜜调味",
-                    "盛入碗中，撒上坚果和水果即可"
-                ]
-            },
-            {
-                id: 53,
-                name: "蒜香排骨",
-                emoji: "🍖",
-                difficulty: "medium",
-                time: "40分钟",
-                spicy: true,
-                vegetarian: false,
-                lowCal: false,
-                light: false,
-                ingredients: ["排骨", "蒜", "蒜粉", "料酒", "生抽", "蚝油", "淀粉", "盐", "油"],
-                steps: [
-                    "排骨剁小块，加蒜末、料酒、生抽、蚝油、盐腌制2小时",
-                    "排骨裹上干淀粉",
-                    "油温170度，下排骨炸15分钟捞出",
-                    "复炸一次至外酥里嫩",
-                    "撒上蒜粉即可享用"
-                ]
-            },
-            {
-                id: 54,
-                name: "清炒豆芽",
-                emoji: "🌱",
-                difficulty: "easy",
-                time: "10分钟",
-                spicy: false,
-                vegetarian: true,
-                lowCal: true,
-                light: true,
-                ingredients: ["豆芽", "葱", "蒜", "盐", "醋", "香油"],
-                steps: [
-                    "豆芽洗净，沥干水分",
-                    "锅中少许油，爆香蒜末",
-                    "下豆芽大火快炒",
-                    "加入盐和少许醋调味",
-                    "出锅前淋少许香油即可"
-                ]
-            },
-            {
-                id: 55,
-                name: "蜜汁烤翅",
-                emoji: "🍗",
-                difficulty: "easy",
-                time: "35分钟",
-                spicy: false,
-                vegetarian: false,
-                lowCal: false,
-                light: false,
-                ingredients: ["鸡翅", "蜂蜜", "生抽", "蚝油", "蒜", "盐", "油"],
-                steps: [
-                    "鸡翅洗净，两面划几刀",
-                    "调腌料：蜂蜜、生抽、蚝油、蒜末、盐拌匀",
-                    "鸡翅放入腌料中冷藏腌制2小时以上",
-                    "烤箱预热200度，烤20分钟",
-                    "中途翻面，刷剩余腌料",
-                    "烤至表面金黄即可"
-                ]
-            }
+            { id: 1, name: "番茄炒蛋", emoji: "🍳", difficulty: "easy", time: "10分钟", spicy: false, vegetarian: true, lowCal: false, light: true, ingredients: ["鸡蛋", "番茄", "葱", "盐", "油"], steps: ["番茄洗净切块，鸡蛋打散加少许盐搅匀", "热锅冷油，倒入蛋液炒至凝固后盛出", "锅中再加少许油，放入番茄块翻炒出汁", "加入炒好的鸡蛋，加盐调味", "撒上葱花即可出锅"] },
+            { id: 2, name: "可乐鸡翅", emoji: "🍗", difficulty: "medium", time: "30分钟", spicy: false, vegetarian: false, lowCal: false, light: false, ingredients: ["鸡翅", "可乐", "生抽", "姜", "葱", "料酒"], steps: ["鸡翅洗净，两面划几刀方便入味", "冷水下锅焯水，加料酒去腥，捞出沥干", "锅中少许油，将鸡翅煎至两面金黄", "加入可乐、生抽、姜片、葱段", "大火烧开转小火焖煮20分钟", "大火收汁，汤汁浓稠即可出锅"] },
+            { id: 3, name: "酸辣土豆丝", emoji: "🥔", difficulty: "easy", time: "15分钟", spicy: true, vegetarian: true, lowCal: true, light: false, ingredients: ["土豆", "干辣椒", "醋", "盐", "葱", "蒜"], steps: ["土豆去皮切成细丝，用清水浸泡去除淀粉", "锅中烧开水，将土豆丝焯水30秒捞出过凉水", "锅中少许油，爆香蒜片和干辣椒", "倒入土豆丝大火快炒", "加醋、盐调味，翻炒均匀即可"] },
+            { id: 4, name: "红烧肉", emoji: "🥩", difficulty: "medium", time: "60分钟", spicy: false, vegetarian: false, lowCal: false, light: false, ingredients: ["五花肉", "冰糖", "生抽", "老抽", "料酒", "姜", "八角", "桂皮"], steps: ["五花肉切成3厘米见方的块", "冷水下锅焯水，撇去浮沫后捞出", "锅中少许油，放入冰糖小火炒至焦糖色", "下入肉块翻炒上色，加料酒、生抽、老抽", "加入足量开水没过肉块，放入姜、八角、桂皮", "大火烧开转小火炖1小时", "大火收汁，汤汁浓稠即可"] },
+            { id: 5, name: "蒜蓉西兰花", emoji: "🥦", difficulty: "easy", time: "10分钟", spicy: false, vegetarian: true, lowCal: true, light: true, ingredients: ["西兰花", "蒜", "盐", "蚝油", "油"], steps: ["西兰花掰成小朵，洗净备用", "烧开水，加少许盐和油，放入西兰花焯水1分钟", "捞出过凉水保持翠绿，沥干备用", "锅中少许油，爆香蒜末", "倒入西兰花快速翻炒，加蚝油和盐调味即可"] },
+            { id: 6, name: "宫保鸡丁", emoji: "🍛", difficulty: "medium", time: "20分钟", spicy: true, vegetarian: false, lowCal: false, light: false, ingredients: ["鸡胸肉", "花生米", "干辣椒", "花椒", "黄瓜", "葱", "姜", "蒜", "生抽", "醋", "糖", "淀粉"], steps: ["鸡胸肉切丁，加盐、料酒、淀粉抓匀腌制15分钟", "调酱汁：生抽、醋、糖、淀粉、水拌匀", "花生米炸至金黄酥脆备用", "热锅宽油，下鸡丁滑炒至变色盛出", "锅中留底油，爆香干辣椒、花椒、葱姜蒜", "下鸡丁和黄瓜丁，倒入酱汁快速翻炒", "出锅前撒入花生米即可"] },
+            { id: 7, name: "麻婆豆腐", emoji: "🧈", difficulty: "easy", time: "15分钟", spicy: true, vegetarian: true, lowCal: false, light: false, ingredients: ["豆腐", "肉末", "豆瓣酱", "花椒粉", "葱", "姜", "蒜", "生抽", "淀粉"], steps: ["豆腐切2厘米见方的块，放入淡盐水中浸泡去豆腥", "锅中少许油，下肉末炒散至变色", "加入豆瓣酱、葱姜蒜末炒出红油", "加入适量清水，放入豆腐块轻轻推动", "加生抽调味，小火煮5分钟入味", "水淀粉勾芡，出锅撒花椒粉和葱花"] },
+            { id: 8, name: "清蒸鲈鱼", emoji: "🐟", difficulty: "medium", time: "25分钟", spicy: false, vegetarian: false, lowCal: true, light: true, ingredients: ["鲈鱼", "葱", "姜", "蒸鱼豉油", "料酒", "红椒"], steps: ["鲈鱼处理干净，两面划几刀，抹上料酒和盐腌制10分钟", "盘底铺上葱段和姜片，放上鲈鱼", "水开后放入蒸锅，大火蒸8-10分钟", "取出倒掉蒸出的水，铺上葱丝和红椒丝", "淋上蒸鱼豉油，浇上热油激发香味即可"] },
+            { id: 9, name: "蛋炒饭", emoji: "🍚", difficulty: "easy", time: "10分钟", spicy: false, vegetarian: true, lowCal: false, light: false, ingredients: ["米饭", "鸡蛋", "葱", "盐", "生抽", "油"], steps: ["准备隔夜米饭，用手抓散备用", "鸡蛋打散，可以先把蛋液拌入米饭中", "锅中宽油烧热，下米饭大火翻炒", "炒至米饭粒粒分明，蛋液凝固", "加盐和少许生抽调味", "撒上葱花翻炒均匀即可出锅"] },
+            { id: 10, name: "酸辣汤", emoji: "🍲", difficulty: "easy", time: "15分钟", spicy: true, vegetarian: false, lowCal: true, light: false, ingredients: ["豆腐", "木耳", "金针菇", "番茄", "鸡蛋", "醋", "生抽", "胡椒粉", "淀粉", "葱"], steps: ["所有食材切成细丝备用", "锅中加水烧开，放入豆腐丝、木耳丝、金针菇", "煮开后加入番茄丝继续煮2分钟", "水淀粉勾芡至汤汁浓稠", "蛋液打散淋入锅中形成蛋花", "加醋、生抽、胡椒粉调味，撒葱花出锅"] },
+            { id: 11, name: "糖醋里脊", emoji: "🍖", difficulty: "medium", time: "30分钟", spicy: false, vegetarian: false, lowCal: false, light: false, ingredients: ["猪里脊", "番茄酱", "醋", "糖", "淀粉", "鸡蛋", "白芝麻"], steps: ["里脊肉切条，加盐、料酒、蛋清腌制15分钟", "裹上干淀粉，油温170度炸至金黄捞出", "复炸一次至酥脆备用", "调糖醋汁：番茄酱、醋、糖、水淀粉拌匀", "锅中少许油，倒入糖醋汁烧开", "下里脊肉快速翻炒，裹匀酱汁", "撒白芝麻即可出锅"] },
+            { id: 12, name: "地三鲜", emoji: "🍆", difficulty: "medium", time: "25分钟", spicy: false, vegetarian: true, lowCal: false, light: false, ingredients: ["茄子", "土豆", "青椒", "葱", "蒜", "生抽", "蚝油", "糖", "淀粉"], steps: ["茄子、土豆切滚刀块，青椒切块", "茄子块加盐腌制10分钟，挤去水分", "分别将土豆、茄子、青椒过油炸至微黄捞出", "锅中留底油，爆香葱蒜末", "倒入炸好的三样食材，加生抽、蚝油、糖调味", "快速翻炒均匀，水淀粉勾薄芡即可"] },
+            { id: 13, name: "鱼香肉丝", emoji: "🥢", difficulty: "medium", time: "25分钟", spicy: true, vegetarian: false, lowCal: false, light: false, ingredients: ["猪里脊", "木耳", "胡萝卜", "青椒", "泡椒", "葱", "姜", "蒜", "醋", "糖", "生抽", "淀粉"], steps: ["里脊肉切丝，加盐、料酒、淀粉抓匀腌制", "木耳、胡萝卜、青椒切丝备用", "调鱼香汁：醋、糖、生抽、淀粉、水拌匀", "热锅宽油，下肉丝滑炒至变色盛出", "锅中留底油，爆香泡椒、葱姜蒜", "下配菜翻炒，倒回肉丝，淋入鱼香汁", "大火快速翻炒均匀即可出锅"] },
+            { id: 14, name: "蒜蓉粉丝蒸虾", emoji: "🦐", difficulty: "medium", time: "20分钟", spicy: false, vegetarian: false, lowCal: true, light: true, ingredients: ["大虾", "粉丝", "蒜", "葱", "蒸鱼豉油", "料酒"], steps: ["粉丝泡软铺在盘底", "大虾去头开背，去虾线，铺在粉丝上", "蒜末炒香，加蒸鱼豉油拌匀", "将蒜蓉酱铺在虾背上", "水开后放入蒸锅，大火蒸6-8分钟", "出锅撒葱花，淋热油即可"] },
+            { id: 15, name: "凉拌黄瓜", emoji: "🥒", difficulty: "easy", time: "10分钟", spicy: true, vegetarian: true, lowCal: true, light: true, ingredients: ["黄瓜", "蒜", "小米辣", "醋", "生抽", "香油", "盐", "糖"], steps: ["黄瓜洗净，用刀背拍碎后切段", "蒜切末、小米辣圈放入碗中", "加醋、生抽、香油、盐、糖调成汁", "黄瓜放入碗中，倒入调料拌匀", "放入冰箱冷藏10分钟更入味"] },
+            { id: 16, name: "红烧排骨", emoji: "🍖", difficulty: "medium", time: "45分钟", spicy: false, vegetarian: false, lowCal: false, light: false, ingredients: ["排骨", "冰糖", "生抽", "老抽", "料酒", "姜", "八角", "桂皮"], steps: ["排骨剁小块，冷水焯水去血沫", "锅中少许油，小火炒冰糖至焦糖色", "下排骨翻炒上色", "加料酒、生抽、老抽、姜片", "加开水没过排骨，放八角桂皮", "大火烧开转小火炖40分钟", "大火收汁即可"] },
+            { id: 17, name: "干煸四季豆", emoji: "🫛", difficulty: "easy", time: "15分钟", spicy: true, vegetarian: true, lowCal: true, light: false, ingredients: ["四季豆", "干辣椒", "花椒", "蒜", "盐", "生抽"], steps: ["四季豆去头尾和老筋，掰成段", "锅中宽油，将四季豆炸至虎皮状捞出", "锅中留底油，爆香干辣椒、花椒、蒜末", "下四季豆大火快炒", "加盐和生抽调味，翻炒均匀即可"] },
+            { id: 18, name: "红烧茄子", emoji: "🍆", difficulty: "easy", time: "20分钟", spicy: false, vegetarian: true, lowCal: false, light: false, ingredients: ["茄子", "番茄酱", "蒜", "葱", "生抽", "老抽", "糖", "淀粉"], steps: ["茄子切滚刀块，加盐腌制10分钟", "挤去水分，裹上干淀粉", "油温180度，炸至金黄捞出", "调酱汁：番茄酱、生抽、老抽、糖、水淀粉", "锅中留底油，爆香蒜末", "倒入酱汁烧开，下茄子翻炒裹匀", "撒葱花即可出锅"] },
+            { id: 19, name: "虾仁蒸蛋", emoji: "🍳", difficulty: "easy", time: "20分钟", spicy: false, vegetarian: true, lowCal: true, light: true, ingredients: ["鸡蛋", "虾仁", "葱", "盐", "生抽", "香油", "温水"], steps: ["鸡蛋打散，加入1.5倍温水搅拌均匀", "加少许盐调味，过筛去泡沫", "虾仁用料酒和盐腌制5分钟", "蛋液盖保鲜膜蒸8分钟", "放上虾仁再蒸3分钟", "淋生抽、香油，撒葱花即可"] },
+            { id: 20, name: "青椒炒蛋", emoji: "🥚", difficulty: "easy", time: "10分钟", spicy: false, vegetarian: true, lowCal: true, light: true, ingredients: ["鸡蛋", "青椒", "葱", "盐", "油"], steps: ["青椒切丝，鸡蛋打散加少许盐", "锅中宽油，下鸡蛋炒至凝固盛出", "锅中再加少许油，下青椒丝翻炒", "青椒断生后倒回鸡蛋", "加盐调味，翻炒均匀即可"] },
+            { id: 21, name: "蒜香鸡胸肉", emoji: "🍗", difficulty: "easy", time: "20分钟", spicy: false, vegetarian: false, lowCal: true, light: true, ingredients: ["鸡胸肉", "蒜", "生抽", "蚝油", "盐", "黑胡椒", "橄榄油"], steps: ["鸡胸肉切薄片，用刀背拍松", "加蒜末、生抽、蚝油、盐、黑胡椒腌制15分钟", "锅中少许橄榄油，下鸡片煎至两面金黄", "中火煎至熟透即可"] },
+            { id: 22, name: "冬瓜排骨汤", emoji: "🍲", difficulty: "medium", time: "60分钟", spicy: false, vegetarian: false, lowCal: true, light: true, ingredients: ["排骨", "冬瓜", "姜", "葱", "料酒", "盐"], steps: ["排骨冷水下锅焯水去血沫", "冬瓜去皮切块", "锅中加水，放排骨和姜片，大火烧开", "转小火炖40分钟", "加入冬瓜块再炖15分钟", "加盐调味，撒葱花即可"] },
+            { id: 23, name: "苦瓜炒蛋", emoji: "🍳", difficulty: "easy", time: "15分钟", spicy: false, vegetarian: true, lowCal: true, light: true, ingredients: ["苦瓜", "鸡蛋", "蒜", "盐", "糖", "油"], steps: ["苦瓜去瓤切片，用盐腌制10分钟去苦味", "挤去水分备用", "鸡蛋打散加少许盐", "锅中宽油，下苦瓜翻炒至断生", "倒入蛋液，炒至凝固", "加少许糖调味即可"] },
+            { id: 24, name: "酱爆圆白菜", emoji: "🥬", difficulty: "easy", time: "10分钟", spicy: false, vegetarian: true, lowCal: true, light: false, ingredients: ["圆白菜", "干辣椒", "蒜", "甜面酱", "生抽", "糖", "油"], steps: ["圆白菜撕成大片，洗净沥干", "锅中宽油，爆香干辣椒和蒜片", "下圆白菜大火快炒", "加入甜面酱、生抽、糖调味", "翻炒均匀即可出锅"] },
+            { id: 25, name: "番茄牛腩", emoji: "🍅", difficulty: "hard", time: "120分钟", spicy: false, vegetarian: false, lowCal: false, light: false, ingredients: ["牛腩", "番茄", "洋葱", "姜", "八角", "桂皮", "料酒", "生抽", "老抽", "盐", "糖"], steps: ["牛腩切块，冷水焯水去血沫", "番茄切块，洋葱切丝", "锅中少许油，炒香洋葱、姜片、八角、桂皮", "下牛腩翻炒，加料酒、生抽、老抽", "加足量开水，大火烧开转小火炖90分钟", "加入番茄块再炖20分钟", "加盐、糖调味，大火收汁即可"] },
+            { id: 26, name: "手撕包菜", emoji: "🥬", difficulty: "easy", time: "10分钟", spicy: false, vegetarian: true, lowCal: true, light: true, ingredients: ["圆白菜", "干辣椒", "蒜", "醋", "生抽", "盐", "油"], steps: ["圆白菜用手撕成大片，洗净沥干", "锅中少许油，爆香干辣椒和蒜片", "下包菜大火快炒至断生", "加醋、生抽、盐调味", "快速翻炒均匀即可出锅"] },
+            { id: 27, name: "口水鸡", emoji: "🍗", difficulty: "medium", time: "35分钟", spicy: true, vegetarian: false, lowCal: true, light: false, ingredients: ["鸡腿", "花生碎", "芝麻", "葱", "姜", "蒜", "花椒粉", "辣椒油", "生抽", "醋", "糖"], steps: ["鸡腿冷水下锅，加姜片料酒煮熟", "煮熟后捞出放凉，剁成块摆盘", "调口水汁：蒜末、花椒粉、辣椒油、生抽、醋、糖拌匀", "将口水汁淋在鸡块上", "撒花生碎和芝麻即可"] },
+            { id: 28, name: "青椒炒肉丝", emoji: "🥩", difficulty: "easy", time: "15分钟", spicy: false, vegetarian: false, lowCal: false, light: false, ingredients: ["猪里脊", "青椒", "姜", "蒜", "生抽", "料酒", "淀粉", "盐"], steps: ["里脊肉切丝，加盐、料酒、淀粉抓匀腌制", "青椒去籽切丝备用", "热锅宽油，下肉丝滑炒至变色盛出", "锅中留底油，爆香姜蒜末", "下青椒丝翻炒至断生，倒回肉丝", "加生抽和盐调味，翻炒均匀即可"] },
+            { id: 29, name: "丝瓜炒蛋", emoji: "🥚", difficulty: "easy", time: "15分钟", spicy: false, vegetarian: true, lowCal: true, light: true, ingredients: ["丝瓜", "鸡蛋", "蒜", "盐", "油"], steps: ["丝瓜去皮切成滚刀块", "鸡蛋打散加少许盐搅匀", "锅中宽油，倒入蛋液炒至凝固盛出", "锅中再加少许油，爆香蒜末", "下丝瓜翻炒至软，加盐调味", "倒回鸡蛋翻炒均匀即可"] },
+            { id: 30, name: "凉拌木耳", emoji: "🌿", difficulty: "easy", time: "15分钟", spicy: true, vegetarian: true, lowCal: true, light: true, ingredients: ["木耳", "蒜", "小米辣", "葱", "醋", "生抽", "香油", "盐", "糖"], steps: ["干木耳提前泡发，撕成小朵", "锅中烧开水，将木耳焯水2分钟捞出", "过凉水沥干备用", "蒜末、葱末、小米辣圈放入碗中", "加醋、生抽、香油、盐、糖调成汁", "木耳拌入调料即可享用"] },
+            { id: 31, name: "蒸蛋羹", emoji: "🍳", difficulty: "easy", time: "20分钟", spicy: false, vegetarian: true, lowCal: true, light: true, ingredients: ["鸡蛋", "温水", "盐", "生抽", "香油", "葱"], steps: ["鸡蛋打散，加入1.5倍温水搅拌均匀", "加少许盐调味，过筛去泡沫", "盖上保鲜膜，用牙签扎几个孔", "水开后放入蒸锅，中火蒸10分钟", "关火焖5分钟，取出去掉保鲜膜", "淋生抽、香油，撒葱花即可"] },
+            { id: 32, name: "回锅肉", emoji: "🥓", difficulty: "medium", time: "30分钟", spicy: true, vegetarian: false, lowCal: false, light: false, ingredients: ["五花肉", "青蒜", "郫县豆瓣酱", "甜面酱", "姜", "蒜", "料酒", "糖"], steps: ["五花肉整块冷水下锅，加姜片料酒煮至八分熟", "捞出放凉切成薄片", "锅中少许油，下肉片煸炒至出油卷曲", "加入豆瓣酱、甜面酱炒出红油", "下青蒜段翻炒，加糖调味", "炒至青蒜断生即可出锅"] },
+            { id: 33, name: "酱香饼", emoji: "🫓", difficulty: "medium", time: "35分钟", spicy: false, vegetarian: true, lowCal: false, light: false, ingredients: ["面粉", "郫县豆瓣酱", "甜面酱", "蒜", "葱", "白芝麻", "油", "糖"], steps: ["面粉加温水揉成面团，醒发20分钟", "调酱汁：豆瓣酱、甜面酱、蒜末、糖、水拌匀", "面团擀薄，刷油，切几刀不切断", "卷起后再擀成圆饼", "平底锅少许油，小火煎至两面金黄", "刷上酱汁，撒葱花和白芝麻，切块即可"] },
+            { id: 34, name: "紫菜蛋花汤", emoji: "🍵", difficulty: "easy", time: "10分钟", spicy: false, vegetarian: true, lowCal: true, light: true, ingredients: ["紫菜", "鸡蛋", "虾皮", "葱", "盐", "香油"], steps: ["紫菜撕成小块，鸡蛋打散", "锅中烧水，水开后下紫菜和虾皮", "水淀粉勾薄芡", "关小火，淋入蛋液形成蛋花", "加盐调味，撒葱花，淋香油即可"] },
+            { id: 35, name: "蒜蓉生蚝", emoji: "🦪", difficulty: "easy", time: "20分钟", spicy: false, vegetarian: false, lowCal: true, light: true, ingredients: ["生蚝", "蒜", "葱", "小米辣", "蒸鱼豉油", "料酒"], steps: ["生蚝刷洗干净，撬开备用", "蒜末炒香，加入蒸鱼豉油和料酒调匀", "将蒜蓉酱均匀铺在生蚝肉上", "水开后放入蒸锅，大火蒸5分钟", "出炉撒葱花和小米辣圈", "淋少许热油激发香味即可"] },
+            { id: 36, name: "芝士焗番茄", emoji: "🍅", difficulty: "easy", time: "25分钟", spicy: false, vegetarian: true, lowCal: false, light: false, ingredients: ["番茄", "马苏里拉芝士", "罗勒", "盐", "黑胡椒", "橄榄油"], steps: ["番茄洗净，切去顶部挖空内部", "番茄内部填充切碎的番茄肉，加盐、黑胡椒、罗勒", "撒上马苏里拉芝士", "放入预热200度的烤箱，烤15分钟", "芝士融化金黄即可出炉"] },
+            { id: 37, name: "酸辣白菜", emoji: "🥬", difficulty: "easy", time: "15分钟", spicy: true, vegetarian: true, lowCal: true, light: false, ingredients: ["白菜", "干辣椒", "花椒", "蒜", "醋", "盐", "糖", "生抽"], steps: ["白菜切成块，叶子和帮子分开", "锅中少许油，爆香干辣椒、花椒、蒜片", "先下白菜帮翻炒至断生", "再下叶子翻炒，加醋、盐、糖、生抽调味", "大火快速翻炒均匀即可出锅"] },
+            { id: 38, name: "腊肠炒饭", emoji: "🍚", difficulty: "easy", time: "15分钟", spicy: false, vegetarian: false, lowCal: false, light: false, ingredients: ["米饭", "腊肠", "鸡蛋", "葱", "盐", "生抽"], steps: ["腊肠切成小丁，鸡蛋打散", "锅中少许油，下腊肠丁翻炒出油", "倒入米饭大火翻炒", "米饭炒散后淋入蛋液快速翻炒", "加盐和少许生抽调味", "撒葱花翻炒均匀即可出锅"] },
+            { id: 39, name: "可乐饼", emoji: "🥔", difficulty: "medium", time: "40分钟", spicy: false, vegetarian: false, lowCal: false, light: false, ingredients: ["土豆", "猪肉末", "洋葱", "面粉", "鸡蛋", "面包糠", "盐", "黑胡椒", "油"], steps: ["土豆蒸熟压成泥，洋葱切碎", "锅中少许油，炒香洋葱和肉末", "加入土豆泥翻炒，加盐和黑胡椒调味", "冷却后团成椭圆形，裹面粉、蛋液、面包糠", "油温170度，炸至金黄酥脆", "捞出沥油，配番茄酱享用"] },
+            { id: 40, name: "味噌汤", emoji: "🍲", difficulty: "easy", time: "15分钟", spicy: false, vegetarian: false, lowCal: true, light: true, ingredients: ["内酯豆腐", "海带", "味噌酱", "葱", "木鱼花"], steps: ["海带提前泡发，和水一起煮开", "煮5分钟后捞出海带，留下高汤", "内酯豆腐切成小块放入汤中", "关火，用少量汤稀释味噌酱后倒入锅中", "不要煮沸，会破坏味噌的香味", "盛入碗中，撒木鱼花和葱花即可"] },
+            { id: 41, name: "椒盐排骨", emoji: "🍖", difficulty: "medium", time: "35分钟", spicy: true, vegetarian: false, lowCal: false, light: false, ingredients: ["排骨", "椒盐粉", "蒜", "姜", "料酒", "淀粉", "油", "葱"], steps: ["排骨剁小块，加蒜姜汁、料酒、盐腌制30分钟", "排骨裹上干淀粉", "油温170度，下排骨炸15分钟捞出", "复炸一次至外酥里嫩", "撒上椒盐粉和葱花即可"] },
+            { id: 42, name: "柠檬鸡", emoji: "🍋", difficulty: "easy", time: "30分钟", spicy: false, vegetarian: false, lowCal: true, light: true, ingredients: ["鸡胸肉", "柠檬", "蒜", "蜂蜜", "生抽", "橄榄油", "盐", "黑胡椒"], steps: ["鸡胸肉切片，用盐、黑胡椒、柠檬汁腌制15分钟", "调酱汁：柠檬汁、蜂蜜、生抽、蒜末拌匀", "锅中少许橄榄油，下鸡片煎至两面金黄", "倒入酱汁，小火煮至汤汁浓稠", "鸡片裹满酱汁即可出锅"] },
+            { id: 43, name: "拍黄瓜", emoji: "🥒", difficulty: "easy", time: "10分钟", spicy: false, vegetarian: true, lowCal: true, light: true, ingredients: ["黄瓜", "蒜", "醋", "生抽", "香油", "盐", "糖"], steps: ["黄瓜洗净，用刀背拍碎后切段", "蒜切末放入碗中", "加醋、生抽、香油、盐、糖调成汁", "黄瓜放入碗中，倒入调料拌匀", "放入冰箱冷藏10分钟更入味"] },
+            { id: 44, name: "培根金针菇卷", emoji: "🥓", difficulty: "easy", time: "20分钟", spicy: false, vegetarian: false, lowCal: true, light: false, ingredients: ["培根", "金针菇", "牙签", "黑胡椒", "油"], steps: ["金针菇洗净，撕成小簇", "培根切成适当长度", "用培根将金针菇卷起，用牙签固定", "平底锅少许油，小火煎至培根两面金黄", "撒黑胡椒即可享用"] },
+            { id: 45, name: "姜葱炒蟹", emoji: "🦀", difficulty: "medium", time: "25分钟", spicy: false, vegetarian: false, lowCal: true, light: false, ingredients: ["螃蟹", "姜", "葱", "蒜", "料酒", "生抽", "淀粉", "盐", "油"], steps: ["螃蟹处理干净，剁成块，蟹钳拍裂", "蟹块裹上薄淀粉", "油温180度，将蟹块炸至变色捞出", "锅中留底油，爆香姜葱蒜", "下蟹块翻炒，加料酒、生抽、盐调味", "快速翻炒均匀即可出锅"] },
+            { id: 46, name: "蔬菜沙拉", emoji: "🥗", difficulty: "easy", time: "10分钟", spicy: false, vegetarian: true, lowCal: true, light: true, ingredients: ["生菜", "番茄", "黄瓜", "玉米粒", "沙拉酱", "黑胡椒", "柠檬汁"], steps: ["生菜洗净撕成小块", "番茄切块，黄瓜切片", "所有蔬菜放入大碗中", "加入玉米粒", "淋上沙拉酱，加柠檬汁和黑胡椒拌匀"] },
+            { id: 47, name: "土豆泥", emoji: "🥔", difficulty: "easy", time: "25分钟", spicy: false, vegetarian: true, lowCal: false, light: false, ingredients: ["土豆", "黄油", "牛奶", "盐", "黑胡椒", "葱"], steps: ["土豆去皮切块，蒸熟或煮熟", "趁热压成细腻的泥", "加入黄油和温热的牛奶", "搅拌至顺滑，加盐和黑胡椒调味", "装盘，撒葱花即可"] },
+            { id: 48, name: "辣炒花甲", emoji: "🐚", difficulty: "easy", time: "15分钟", spicy: true, vegetarian: false, lowCal: true, light: false, ingredients: ["花甲", "干辣椒", "花椒", "蒜", "姜", "葱", "料酒", "生抽", "盐"], steps: ["花甲提前用盐水浸泡吐沙", "冷水下锅焯水，开口后捞出", "锅中少许油，爆香干辣椒、花椒、蒜姜", "下花甲大火快炒", "加料酒、生抽、盐调味", "撒葱花翻炒均匀即可出锅"] },
+            { id: 49, name: "南瓜粥", emoji: "🎃", difficulty: "easy", time: "30分钟", spicy: false, vegetarian: true, lowCal: true, light: true, ingredients: ["南瓜", "大米", "糯米", "冰糖", "牛奶"], steps: ["南瓜去皮切块，大米和糯米混合洗净", "南瓜块蒸熟或煮熟", "加入大米和糯米煮成粥", "加入蒸熟的南瓜泥继续煮", "加入冰糖调味", "出锅前加入少许牛奶增添奶香"] },
+            { id: 50, name: "凉拌海带丝", emoji: "🌿", difficulty: "easy", time: "15分钟", spicy: true, vegetarian: true, lowCal: true, light: true, ingredients: ["海带", "蒜", "小米辣", "醋", "生抽", "香油", "盐", "糖"], steps: ["干海带提前泡发，洗净切丝", "锅中烧开水，将海带丝焯水2分钟", "捞出过凉水沥干", "蒜末、小米辣圈放入碗中", "加醋、生抽、香油、盐、糖调成汁", "海带丝拌入调料即可"] },
+            { id: 51, name: "番茄牛腩", emoji: "🍅", difficulty: "hard", time: "120分钟", spicy: false, vegetarian: false, lowCal: false, light: false, ingredients: ["牛腩", "番茄", "洋葱", "姜", "八角", "桂皮", "料酒", "生抽", "老抽", "盐", "糖"], steps: ["牛腩切块，冷水焯水去血沫", "番茄切块，洋葱切丝", "锅中少许油，炒香洋葱、姜片、八角、桂皮", "下牛腩翻炒，加料酒、生抽、老抽", "加足量开水，大火烧开转小火炖90分钟", "加入番茄块再炖20分钟", "加盐、糖调味，大火收汁即可"] },
+            { id: 52, name: "燕麦粥", emoji: "🥣", difficulty: "easy", time: "15分钟", spicy: false, vegetarian: true, lowCal: true, light: true, ingredients: ["燕麦", "牛奶", "蜂蜜", "坚果", "水果"], steps: ["燕麦片放入锅中", "加入牛奶和适量水", "小火煮至燕麦软糯", "加入蜂蜜调味", "盛入碗中，撒上坚果和水果即可"] },
+            { id: 53, name: "蒜香排骨", emoji: "🍖", difficulty: "medium", time: "40分钟", spicy: true, vegetarian: false, lowCal: false, light: false, ingredients: ["排骨", "蒜", "蒜粉", "料酒", "生抽", "蚝油", "淀粉", "盐", "油"], steps: ["排骨剁小块，加蒜末、料酒、生抽、蚝油、盐腌制2小时", "排骨裹上干淀粉", "油温170度，下排骨炸15分钟捞出", "复炸一次至外酥里嫩", "撒上蒜粉即可享用"] },
+            { id: 54, name: "清炒豆芽", emoji: "🌱", difficulty: "easy", time: "10分钟", spicy: false, vegetarian: true, lowCal: true, light: true, ingredients: ["豆芽", "葱", "蒜", "盐", "醋", "香油"], steps: ["豆芽洗净，沥干水分", "锅中少许油，爆香蒜末", "下豆芽大火快炒", "加入盐和少许醋调味", "出锅前淋少许香油即可"] },
+            { id: 55, name: "蜜汁烤翅", emoji: "🍗", difficulty: "easy", time: "35分钟", spicy: false, vegetarian: false, lowCal: false, light: false, ingredients: ["鸡翅", "蜂蜜", "生抽", "蚝油", "蒜", "盐", "油"], steps: ["鸡翅洗净，两面划几刀", "调腌料：蜂蜜、生抽、蚝油、蒜末、盐拌匀", "鸡翅放入腌料中冷藏腌制2小时以上", "烤箱预热200度，烤20分钟", "中途翻面，刷剩余腌料", "烤至表面金黄即可"] }
         ];
         
         // State
@@ -2092,8 +1410,11 @@
             vegetarian: false,
             lowCal: false
         };
-        // 改进：跟踪返回位置
         let previousTab = 'home';
+        
+        // Fat Loss State
+        let fatLossData = JSON.parse(localStorage.getItem('fatLossData')) || {};
+        let waterData = JSON.parse(localStorage.getItem('waterData')) || { count: 0, date: '' };
         
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
@@ -2101,6 +1422,7 @@
             renderFavorites();
             renderHistory();
             initSwipeGesture();
+            initFatLoss();
         });
         
         // Tab Navigation
@@ -2112,7 +1434,6 @@
         }
         
         function switchMainTab(tab) {
-            // 改进：记录当前 tab 用于返回
             const currentActive = document.querySelector('.bottom-nav .nav-item.active');
             if (currentActive) {
                 const currentTab = currentActive.dataset.tab;
@@ -2132,23 +1453,11 @@
         // Random Recipe
         function randomRecipe() {
             let filtered = recipes;
-            // Apply preferences filter
-            if (preferences.spicy) {
-                filtered = filtered.filter(r => r.spicy);
-            }
-            if (preferences.light) {
-                filtered = filtered.filter(r => r.light);
-            }
-            if (preferences.vegetarian) {
-                filtered = filtered.filter(r => r.vegetarian);
-            }
-            if (preferences.lowCal) {
-                filtered = filtered.filter(r => r.lowCal);
-            }
-            // If no matching recipes, use all
-            if (filtered.length === 0) {
-                filtered = recipes;
-            }
+            if (preferences.spicy) filtered = filtered.filter(r => r.spicy);
+            if (preferences.light) filtered = filtered.filter(r => r.light);
+            if (preferences.vegetarian) filtered = filtered.filter(r => r.vegetarian);
+            if (preferences.lowCal) filtered = filtered.filter(r => r.lowCal);
+            if (filtered.length === 0) filtered = recipes;
             const recipe = filtered[Math.floor(Math.random() * filtered.length)];
             showRecipe(recipe);
             addToHistory(recipe);
@@ -2156,7 +1465,6 @@
         
         // Show Recipe
         function showRecipe(recipe) {
-            // 从冰箱/收藏/历史点过来时，切换到首页 tab 显示菜谱
             switchMainTab('home');
             
             const isFavorite = favorites.some(f => f.id === recipe.id);
@@ -2168,8 +1476,10 @@
             if (recipe.vegetarian) tags.push(`<span class="tag tag-vegetarian">🥗 素食</span>`);
             if (recipe.lowCal) tags.push(`<span class="tag tag-low-cal">💪 减脂</span>`);
             if (recipe.light) tags.push(`<span class="tag tag-light">🥬 清淡</span>`);
+            
             const ingredientsHtml = recipe.ingredients.map(i => `<span class="ingredient">${i}</span>`).join('');
             const stepsHtml = recipe.steps.map((s, i) => `<li class="step-item">${s}</li>`).join('');
+            
             document.getElementById('recipeCard').innerHTML = `
                 <div class="recipe-header">
                     <div>
@@ -2195,10 +1505,9 @@
                 </div>
                 <div class="swipe-hint">👈 左滑可快速切换</div>
             `;
+            
             document.getElementById('homeView').style.display = 'none';
             document.getElementById('recipeView').classList.add('show');
-            
-            // 重新初始化滑动手势
             initSwipeGesture();
         }
         
@@ -2207,15 +1516,12 @@
             return map[difficulty] || difficulty;
         }
         
-        // 改进：返回到正确的 tab
         function goHome() {
             document.getElementById('homeView').style.display = 'block';
             document.getElementById('recipeView').classList.remove('show');
-            // 返回到之前所在的 tab
             switchMainTab(previousTab);
         }
         
-        // 改进：初始化滑动手势
         function initSwipeGesture() {
             const card = document.getElementById('recipeCard');
             if (!card) return;
@@ -2234,8 +1540,6 @@
                 if (!isDragging) return;
                 currentX = e.touches[0].clientX;
                 const diff = currentX - startX;
-                
-                // 只响应左滑
                 if (diff < 0) {
                     card.style.transform = `translateX(${diff}px)`;
                     card.style.opacity = 1 + diff / 200;
@@ -2246,10 +1550,7 @@
                 if (!isDragging) return;
                 isDragging = false;
                 const diff = currentX - startX;
-                
                 card.classList.remove('swiping');
-                
-                // 左滑超过 100px 触发再来一个
                 if (diff < -100) {
                     card.classList.add('swiped');
                     setTimeout(() => {
@@ -2259,7 +1560,6 @@
                         card.style.opacity = '';
                     }, 200);
                 } else {
-                    // 恢复到原位
                     card.style.transform = '';
                     card.style.opacity = '';
                 }
@@ -2276,7 +1576,6 @@
             renderIngredientTags();
             searchByIngredients();
             
-            // 改进：按钮点击高亮反馈
             const buttons = document.querySelectorAll('.quick-btn');
             buttons.forEach(btn => {
                 if (btn.textContent.includes(ingredient)) {
@@ -2296,7 +1595,6 @@
                     } else {
                         currentIngredients.push(value);
                     }
-                    // 改进：清空并自动聚焦
                     input.value = '';
                     input.focus();
                     renderIngredientTags();
@@ -2311,11 +1609,11 @@
             
             if (currentIngredients.length === 0) {
                 container.innerHTML = '';
-                clearBtn.style.display = 'none';
+                if (clearBtn) clearBtn.style.display = 'none';
                 return;
             }
             
-            clearBtn.style.display = 'block';
+            if (clearBtn) clearBtn.style.display = 'block';
             container.innerHTML = currentIngredients.map(i => `
                 <span class="input-ingredient-tag">
                     ${i}
@@ -2330,7 +1628,6 @@
             searchByIngredients();
         }
         
-        // 改进：添加一键清除功能
         function clearAllIngredients() {
             currentIngredients = [];
             renderIngredientTags();
@@ -2351,7 +1648,6 @@
                 return;
             }
             
-            // Calculate match score for each recipe
             const scored = recipes.map(recipe => {
                 let matchCount = 0;
                 let matchedIngredients = [];
@@ -2382,11 +1678,8 @@
                 return;
             }
             
-            // 改进：显示更多结果（最多10条），并显示食材匹配信息
             const displayCount = Math.min(scored.length, 10);
             const countHtml = `<div class="match-count">找到 <strong>${scored.length}</strong> 道菜，你有 <strong>${scored[0].matchCount}/${scored[0].total}</strong> 种食材匹配</div>`;
-            
-            // 添加换一换按钮
             const changeBtnHtml = `<button class="change-recipe-btn" onclick="randomRecipe(); switchMainTab('home');">
                 🎲 换个随机菜试试
             </button>`;
@@ -2412,7 +1705,6 @@
             const recipe = recipes.find(r => r.id === id);
             const index = favorites.findIndex(f => f.id === id);
             
-            // 改进：添加按钮动画反馈
             const favBtn = document.getElementById('favBtn');
             if (favBtn) {
                 favBtn.classList.add(index > -1 ? 'animate-shake' : 'animate-pop');
@@ -2464,11 +1756,8 @@
         
         // History
         function addToHistory(recipe) {
-            // Remove if already exists
             history = history.filter(h => h.id !== recipe.id);
-            // Add to beginning
             history.unshift(recipe);
-            // Keep only last 20
             history = history.slice(0, 20);
             localStorage.setItem('history', JSON.stringify(history));
         }
@@ -2520,6 +1809,8 @@
                 history = [];
                 preferences = { spicy: false, light: false, vegetarian: false, lowCal: false };
                 currentIngredients = [];
+                fatLossData = {};
+                waterData = { count: 0, date: '' };
                 localStorage.clear();
                 renderFavorites();
                 renderHistory();
@@ -2530,7 +1821,7 @@
             }
         }
         
-        // Toast - 改进：2.5秒
+        // Toast
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -2538,6 +1829,233 @@
             setTimeout(() => {
                 toast.classList.remove('show');
             }, 2500);
+        }
+        
+        // =====================
+        // Fat Loss Module
+        // =====================
+        
+        function initFatLoss() {
+            // Load saved data
+            if (fatLossData.height) document.getElementById('fatHeight').value = fatLossData.height;
+            if (fatLossData.weight) document.getElementById('fatWeight').value = fatLossData.weight;
+            if (fatLossData.goal) document.getElementById('fatGoal').value = fatLossData.goal;
+            if (fatLossData.people) document.getElementById('fatPeople').value = fatLossData.people;
+            
+            // Check water data date
+            const today = new Date().toDateString();
+            if (waterData.date !== today) {
+                waterData = { count: 0, date: today };
+                localStorage.setItem('waterData', JSON.stringify(waterData));
+            }
+            updateWaterUI();
+        }
+        
+        function calculateFatLoss() {
+            const height = parseFloat(document.getElementById('fatHeight').value);
+            const weight = parseFloat(document.getElementById('fatWeight').value);
+            const goal = parseFloat(document.getElementById('fatGoal').value);
+            const people = parseInt(document.getElementById('fatPeople').value) || 1;
+            
+            if (!height || !weight || !goal) {
+                showToast('请输入完整的身高、体重和目标体重');
+                return;
+            }
+            
+            // Save to localStorage
+            fatLossData = { height, weight, goal, people };
+            localStorage.setItem('fatLossData', JSON.stringify(fatLossData));
+            
+            // Calculate BMI
+            const heightM = height / 100;
+            const bmi = weight / (heightM * heightM);
+            
+            // Calculate BMR (assuming male, age 30 as default)
+            const bmr = 66 + 13.7 * weight + 5 * height - 6.8 * 30;
+            
+            // Calculate TDEE (activity factor 1.2 for sedentary)
+            const activityFactor = 1.2;
+            const tdee = Math.round(bmr * activityFactor);
+            
+            // Target calories (500kcal deficit)
+            const targetCal = tdee - 500;
+            
+            // Weeks to goal
+            const weightDiff = weight - goal;
+            const weeks = weightDiff > 0 ? (weightDiff / 0.5).toFixed(1) : 0;
+            
+            // Display results
+            const bmiCard = document.getElementById('bmiCard');
+            const bmiValue = document.getElementById('bmiValue');
+            bmiValue.textContent = bmi.toFixed(1);
+            
+            bmiCard.className = 'fat-data-item';
+            bmiValue.className = 'fat-data-value';
+            if (bmi < 18.5) {
+                bmiCard.classList.add('bmi-under');
+                bmiValue.classList.add('bmi-green');
+            } else if (bmi < 24) {
+                bmiCard.classList.add('bmi-normal');
+                bmiValue.classList.add('bmi-green');
+            } else if (bmi < 28) {
+                bmiCard.classList.add('bmi-over');
+                bmiValue.classList.add('bmi-orange');
+            } else {
+                bmiCard.classList.add('bmi-obese');
+                bmiValue.classList.add('bmi-red');
+            }
+            
+            document.getElementById('tdeeValue').textContent = tdee;
+            document.getElementById('targetCalValue').textContent = targetCal;
+            document.getElementById('weeksValue').textContent = weeks;
+            
+            // Show results
+            document.getElementById('fatResults').classList.add('show');
+            
+            // Generate meal recommendations
+            generateMealRecommendations(people);
+            
+            // Generate exercise suggestions
+            generateExerciseSuggestions(bmi);
+            
+            // Update water goal
+            const waterGoal = Math.max(8, Math.ceil(weight / 30));
+            document.getElementById('waterGoal').textContent = waterGoal;
+            updateWaterUI();
+        }
+        
+        function generateMealRecommendations(people) {
+            // Filter low calorie recipes
+            const lowCalRecipes = recipes.filter(r => r.lowCal || r.light);
+            
+            if (lowCalRecipes.length < 3) {
+                document.getElementById('fatMealList').innerHTML = `
+                    <div class="empty-state" style="padding: 24px;">
+                        <div class="empty-icon">🥗</div>
+                        <div class="empty-text">暂无减脂餐推荐</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Shuffle and pick 3 meals
+            const shuffled = lowCalRecipes.sort(() => Math.random() - 0.5);
+            const breakfast = shuffled[0];
+            const lunch = shuffled[1];
+            const dinner = shuffled[2] || shuffled[0];
+            
+            const mealTypes = [
+                { type: '🌅 早餐', meal: breakfast, cal: Math.round(350 * people) },
+                { type: '☀️ 午餐', meal: lunch, cal: Math.round(450 * people) },
+                { type: '🌙 晚餐', meal: dinner, cal: Math.round(350 * people) }
+            ];
+            
+            document.getElementById('fatMealList').innerHTML = mealTypes.map(m => {
+                const ingredients = m.meal.ingredients.map(i => i).join('、');
+                return `
+                    <div class="fat-meal-card" onclick="showRecipe(recipes.find(r => r.id === ${m.meal.id})); previousTab = 'fatloss';">
+                        <div class="fat-meal-header">
+                            <span class="fat-meal-emoji">${m.meal.emoji}</span>
+                            <div class="fat-meal-info">
+                                <div class="fat-meal-type">${m.type}</div>
+                                <div class="fat-meal-name">${m.meal.name}</div>
+                            </div>
+                            <span class="fat-meal-cal">${m.cal} kcal</span>
+                        </div>
+                        <div class="fat-meal-ingredients">🥘 ${ingredients}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function generateExerciseSuggestions(bmi) {
+            let exerciseCard = document.getElementById('fatExerciseCard');
+            let suggestions = [];
+            let burnTarget = '300-500';
+            
+            if (bmi < 18.5) {
+                // Underweight - focus on strength training
+                exerciseCard.className = 'fat-exercise-card underweight';
+                suggestions = [
+                    { icon: '🏋️', text: '每周3-4次力量训练，重点锻炼大肌群' },
+                    { icon: '💪', text: '深蹲、硬拉、卧推等复合动作为主' },
+                    { icon: '🍗', text: '配合高蛋白饮食，每公斤体重摄入1.5g蛋白' },
+                    { icon: '😴', text: '保证每天8小时睡眠，促进肌肉恢复' },
+                    { icon: '⏰', text: '训练后补充碳水+蛋白质，帮助增肌' }
+                ];
+                burnTarget = '100-200';
+            } else if (bmi < 24) {
+                // Normal - maintain fitness
+                exerciseCard.className = 'fat-exercise-card';
+                suggestions = [
+                    { icon: '🏃', text: '每周3-5次有氧运动，每次30-45分钟' },
+                    { icon: '💪', text: '每周2-3次力量训练，维持肌肉量' },
+                    { icon: '🧘', text: '加入瑜伽或拉伸，提升柔韧性' },
+                    { icon: '🚶', text: '日常保持每天8000步以上活动量' },
+                    { icon: '💧', text: '运动前后注意补水，保持身体水分平衡' }
+                ];
+            } else if (bmi < 28) {
+                // Overweight - focus on cardio
+                exerciseCard.className = 'fat-exercise-card obese';
+                suggestions = [
+                    { icon: '🏃', text: '每天快走或慢跑30分钟，逐步增加时长' },
+                    { icon: '🚴', text: '每周2-3次游泳或骑行，保护关节' },
+                    { icon: '💪', text: '每周2次力量训练，提升基础代谢' },
+                    { icon: '📉', text: '从低强度开始，避免运动损伤' },
+                    { icon: '📈', text: '逐步将运动时间增加到每天60分钟' }
+                ];
+            } else {
+                // Obese - start gentle
+                exerciseCard.className = 'fat-exercise-card obese';
+                suggestions = [
+                    { icon: '🚶', text: '从每天散步15-20分钟开始' },
+                    { icon: '🏊', text: '游泳是最佳选择，对关节压力小' },
+                    { icon: '🧘', text: '加入轻度瑜伽，改善身体柔韧性' },
+                    { icon: '📈', text: '每周增加10%运动量，循序渐进' },
+                    { icon: '👨‍⚕️', text: '建议咨询医生后再开始剧烈运动' }
+                ];
+                burnTarget = '200-300';
+            }
+            
+            exerciseCard.innerHTML = `
+                <div class="fat-exercise-title">🏃 运动建议</div>
+                <ul class="fat-exercise-list">
+                    ${suggestions.map(s => `
+                        <li class="fat-exercise-item">
+                            <span class="fat-exercise-icon">${s.icon}</span>
+                            <span>${s.text}</span>
+                        </li>
+                    `).join('')}
+                </ul>
+                <div class="fat-exercise-burn">
+                    🎯 目标：每天通过运动多消耗 ${burnTarget} kcal
+                </div>
+            `;
+        }
+        
+        function updateWaterUI() {
+            const current = waterData.count;
+            const goal = parseInt(document.getElementById('waterGoal').textContent) || 8;
+            const progress = Math.min(100, (current / goal) * 100);
+            
+            document.getElementById('waterCurrent').textContent = current;
+            document.getElementById('waterProgressBar').style.width = progress + '%';
+        }
+        
+        function addWater() {
+            const today = new Date().toDateString();
+            if (waterData.date !== today) {
+                waterData = { count: 0, date: today };
+            }
+            
+            waterData.count++;
+            localStorage.setItem('waterData', JSON.stringify(waterData));
+            updateWaterUI();
+            
+            const goal = parseInt(document.getElementById('waterGoal').textContent) || 8;
+            if (waterData.count >= goal) {
+                showToast('太棒了！今日饮水目标达成！💧');
+            }
         }
     </script>
 </body>
