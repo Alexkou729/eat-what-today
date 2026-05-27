@@ -785,6 +785,91 @@
             font-size: 11px;
             font-weight: 600;
         }
+        .swipe-hint {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 12px;
+            opacity: 0.6;
+        }
+        .change-recipe-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            margin-top: 16px;
+        }
+        .change-recipe-btn:hover {
+            background: var(--primary-light);
+            color: white;
+            border-color: var(--primary-light);
+        }
+        .fridge-input-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .clear-all-btn {
+            padding: 8px 14px;
+            background: #FFEBEE;
+            color: var(--accent);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+        .clear-all-btn:hover {
+            background: #FFCDD2;
+        }
+        .empty-hint {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 8px;
+            opacity: 0.7;
+        }
+        .just-added {
+            animation: quickPulse 0.3s ease;
+        }
+        @keyframes quickPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); background: var(--primary); color: white; border-color: var(--primary); }
+            100% { transform: scale(1); }
+        }
+        .animate-pop {
+            animation: pop 0.4s ease;
+        }
+        .animate-shake {
+            animation: shake 0.4s ease;
+        }
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        .swiping {
+            transition: none;
+        }
+        .swiped {
+            animation: swipeOut 0.2s ease forwards;
+        }
+        @keyframes swipeOut {
+            to { transform: translateX(-100%); opacity: 0; }
+        }
     </style>
 </head>
 <body>
@@ -2071,6 +2156,9 @@
         
         // Show Recipe
         function showRecipe(recipe) {
+            // 从冰箱/收藏/历史点过来时，切换到首页 tab 显示菜谱
+            switchMainTab('home');
+            
             const isFavorite = favorites.some(f => f.id === recipe.id);
             const tags = [
                 `<span class="tag tag-difficulty-${recipe.difficulty}">${getDifficultyText(recipe.difficulty)}</span>`,
