@@ -1,1 +1,871 @@
-逆袭人生游戏
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>逆袭人生 - 黄金瞳养成游戏</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg-dark:#080810;--bg-card:#0f0f1a;--bg-card2:#161625;--gold:#d4a843;--gold-light:#f0c060;--gold-bright:#ffe066;--gold-dim:#8a6c2a;--red:#e63946;--green:#52b788;--blue:#4895ef;--text:#e0d5c1;--text-dim:#7a7060;--text-bright:#fff5d6;--border:rgba(212,168,67,0.3);--glow:rgba(240,192,96,0.15);--radius:12px;--radius-sm:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;font-family:'Noto Sans SC',sans-serif;background:var(--bg-dark);color:var(--text);overflow-x:hidden}
+#particle-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.game-wrapper{position:relative;z-index:1;min-height:100vh;max-width:520px;margin:0 auto}
+.screen{display:none;width:100%;min-height:100vh}
+.screen.active{display:flex;flex-direction:column}
+#start-screen{align-items:center;justify-content:center;padding:32px 24px;text-align:center;gap:28px}
+.start-glow{position:relative}
+.eye-icon{font-size:72px;display:block;filter:drop-shadow(0 0 20px rgba(240,192,96,0.8));animation:eyePulse 3s ease-in-out infinite}
+@keyframes eyePulse{0%,100%{filter:drop-shadow(0 0 20px rgba(240,192,96,0.5));transform:scale(1)}50%{filter:drop-shadow(0 0 40px rgba(240,192,96,1));transform:scale(1.05)}}
+.game-title{font-family:'Noto Serif SC',serif;font-size:48px;font-weight:900;background:linear-gradient(135deg,#8a6c2a,#d4a843,#f0c060,#ffe066,#d4a843);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2;letter-spacing:4px}
+.game-subtitle{font-size:15px;color:var(--text-dim);margin-top:8px;letter-spacing:8px}
+.golden-line{width:120px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto}
+.name-section{width:100%;text-align:left}
+.name-label{font-size:13px;color:var(--gold);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.name-input{width:100%;padding:15px 18px;background:var(--bg-card2);border:1.5px solid var(--border);border-radius:var(--radius);color:var(--text-bright);font-size:17px;font-family:'Noto Sans SC',sans-serif;outline:none;transition:border-color .3s,box-shadow .3s}
+.name-input:focus{border-color:var(--gold);box-shadow:0 0 20px var(--glow)}
+.name-input::placeholder{color:var(--text-dim)}
+.identity-section{width:100%;text-align:left}
+.identity-label{font-size:13px;color:var(--gold);margin-bottom:12px}
+.identity-cards{display:flex;flex-direction:column;gap:10px}
+.identity-card{background:var(--bg-card2);border:1.5px solid var(--border);border-radius:var(--radius);padding:15px;cursor:pointer;transition:all .3s;text-align:left}
+.identity-card:hover{border-color:var(--gold-dim);background:rgba(212,168,67,0.05)}
+.identity-card.selected{border-color:var(--gold);background:rgba(212,168,67,0.1);box-shadow:0 0 16px var(--glow)}
+.identity-title{font-size:15px;font-weight:600;color:var(--gold-light);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.identity-desc{font-size:12px;color:var(--text-dim);line-height:1.5}
+.identity-bonus{font-size:12px;color:var(--green);margin-top:5px}
+.start-btn{width:100%;padding:17px;background:linear-gradient(135deg,#8a6c2a,#d4a843,#f0c060);color:#0a0800;border:none;border-radius:50px;font-size:17px;font-weight:700;font-family:'Noto Sans SC',sans-serif;cursor:pointer;transition:all .3s;box-shadow:0 4px 24px rgba(212,168,67,0.3);letter-spacing:3px}
+.start-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(212,168,67,0.5)}
+.start-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+#main-screen{padding-bottom:80px}
+.top-bar{position:sticky;top:0;z-index:50;background:rgba(8,8,16,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:11px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.player-info{display:flex;align-items:center;gap:10px}
+.player-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dim),var(--gold));display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 12px rgba(212,168,67,0.3)}
+.player-name-level{display:flex;flex-direction:column}
+.player-name{font-size:14px;font-weight:600;color:var(--gold-light)}
+.player-level{font-size:11px;color:var(--text-dim);display:flex;align-items:center;gap:4px}
+.level-badge{background:linear-gradient(135deg,var(--gold-dim),var(--gold));color:#0a0800;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700}
+.exp-bar-wrap{flex:1;display:flex;flex-direction:column;gap:4px;min-width:0}
+.exp-label{font-size:11px;color:var(--text-dim);display:flex;justify-content:space-between}
+.exp-bar{height:6px;background:var(--bg-card2);border-radius:3px;overflow:hidden;border:1px solid rgba(212,168,67,0.2)}
+.exp-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold),var(--gold-light));border-radius:3px;transition:width .6s ease;position:relative;overflow:hidden}
+.exp-fill::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);animation:expShine 2s linear infinite}
+@keyframes expShine{from{transform:translateX(-100%)}to{transform:translateX(300%)}}
+.signin-btn{padding:7px 13px;background:var(--bg-card2);border:1.5px solid var(--border);border-radius:20px;font-size:11px;font-family:'Noto Sans SC',sans-serif;color:var(--gold);cursor:pointer;white-space:nowrap;transition:all .3s}
+.signin-btn:hover{border-color:var(--gold);box-shadow:0 0 12px var(--glow)}
+.signin-btn.signed{background:rgba(82,183,136,0.15);border-color:var(--green);color:var(--green)}
+.main-content{padding:16px;display:flex;flex-direction:column;gap:16px}
+.gold-eye-panel{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;position:relative}
+.gold-eye-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.panel-header{padding:11px 16px;border-bottom:1px solid rgba(212,168,67,0.15);display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gold);font-weight:600}
+.panel-body{padding:14px 16px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+.stat-item{background:var(--bg-card2);border-radius:var(--radius-sm);padding:11px;display:flex;flex-direction:column;gap:5px}
+.stat-item.wide{grid-column:1/-1}
+.stat-label{font-size:11px;color:var(--text-dim);display:flex;align-items:center;gap:4px}
+.stat-value{font-size:20px;font-weight:700;color:var(--text-bright);transition:color .3s}
+.stat-value.flash-up{color:var(--green)!important}
+.stat-value.flash-down{color:var(--red)!important}
+.stat-value.changing{animation:statFlash .5s ease}
+@keyframes statFlash{0%{color:var(--gold-light);transform:scale(1.2)}100%{color:var(--text-bright);transform:scale(1)}}
+.stat-bar{height:4px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;margin-top:2px}
+.stat-bar-fill{height:100%;border-radius:2px;transition:width .8s ease}
+.stat-bar-fill.money{background:var(--gold)}
+.stat-bar-fill.charm{background:#e040fb}
+.stat-bar-fill.wisdom{background:var(--blue)}
+.stat-bar-fill.connection{background:#ff7043}
+.stat-bar-fill.luck{background:var(--green)}
+.stat-bar-fill.total{background:linear-gradient(90deg,var(--gold-dim),var(--gold),var(--gold-light))}
+.buff-section{margin-top:4px}
+.buff-title{font-size:11px;color:var(--text-dim);margin-bottom:8px}
+.buff-list{display:flex;flex-wrap:wrap;gap:6px}
+.buff-tag{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:500;border:1px solid;transition:all .3s}
+.buff-tag.common{background:rgba(212,168,67,0.1);border-color:var(--gold-dim);color:var(--gold)}
+.buff-tag.rare{background:rgba(74,144,226,0.1);border-color:rgba(74,144,226,0.4);color:var(--blue)}
+.buff-tag.epic{background:rgba(160,32,240,0.1);border-color:rgba(160,32,240,0.4);color:#d060ff}
+.buff-tag.legendary{background:rgba(255,215,0,0.15);border-color:var(--gold-light);color:var(--gold-bright);animation:legendaryPulse 2s ease-in-out infinite}
+@keyframes legendaryPulse{0%,100%{box-shadow:0 0 8px rgba(240,192,96,0.2)}50%{box-shadow:0 0 18px rgba(240,192,96,0.5)}}
+.no-buff{font-size:12px;color:var(--text-dim);font-style:italic}
+.stage-section{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:var(--bg-card2);border-radius:var(--radius);margin-top:10px}
+.stage-info{display:flex;align-items:center;gap:10px}
+.stage-emoji{font-size:26px}
+.stage-name{font-size:14px;font-weight:600;color:var(--gold-light)}
+.stage-progress{font-size:11px;color:var(--text-dim);margin-top:2px}
+.stage-bar{width:90px;height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;margin-top:5px}
+.stage-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:3px;transition:width .6s ease}
+.tasks-section{}
+.section-title-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.section-title{font-size:15px;font-weight:700;color:var(--gold-light);display:flex;align-items:center;gap:6px}
+.section-title-icon{font-size:18px}
+.refresh-tasks-btn{padding:6px 12px;background:var(--bg-card);border:1px solid var(--border);border-radius:20px;font-size:11px;font-family:'Noto Sans SC',sans-serif;color:var(--text-dim);cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:4px}
+.refresh-tasks-btn:hover{border-color:var(--gold);color:var(--gold)}
+.tasks-list{display:flex;flex-direction:column;gap:10px}
+.task-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:13px 15px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+.task-card:hover{border-color:var(--gold-dim);box-shadow:0 4px 16px var(--glow);transform:translateY(-1px)}
+.task-card.completed{opacity:.5;border-color:rgba(82,183,136,0.3)}
+.task-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
+.task-card.biz::before{background:var(--gold)}
+.task-card.social::before{background:#e040fb}
+.task-card.study::before{background:var(--blue)}
+.task-card.random::before{background:var(--green)}
+.task-header{display:flex;align-items:flex-start;gap:10px;margin-bottom:7px}
+.task-icon{font-size:22px;flex-shrink:0}
+.task-info{flex:1;min-width:0}
+.task-name{font-size:14px;font-weight:600;color:var(--text-bright)}
+.task-desc{font-size:12px;color:var(--text-dim);margin-top:2px;line-height:1.4}
+.task-type-tag{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500;white-space:nowrap;flex-shrink:0;align-self:flex-start}
+.task-type-tag.biz{background:rgba(212,168,67,0.15);color:var(--gold)}
+.task-type-tag.social{background:rgba(224,64,251,0.15);color:#e040fb}
+.task-type-tag.study{background:rgba(72,149,239,0.15);color:var(--blue)}
+.task-type-tag.random{background:rgba(82,183,136,0.15);color:var(--green)}
+.task-rewards{display:flex;gap:8px;flex-wrap:wrap;margin-top:5px}
+.task-reward{font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,0.05);color:var(--text-dim)}
+.task-status{font-size:11px;color:var(--green);font-weight:500;display:flex;align-items:center;gap:4px;margin-top:5px}
+.achievements-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.achievement-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center;transition:all .3s}
+.achievement-card.unlocked{border-color:var(--gold);background:rgba(212,168,67,0.08);box-shadow:0 0 12px var(--glow)}
+.achievement-card.locked{opacity:.4}
+.achievement-icon{font-size:26px;margin-bottom:5px}
+.achievement-name{font-size:13px;font-weight:600;color:var(--text-bright)}
+.achievement-desc{font-size:11px;color:var(--text-dim);margin-top:4px;line-height:1.4}
+.achievement-card.unlocked .achievement-name{color:var(--gold-light)}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(8,8,16,0.97);backdrop-filter:blur(12px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 0;z-index:50;max-width:520px;margin:0 auto}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 14px;background:none;border:none;color:var(--text-dim);font-size:10px;font-family:'Noto Sans SC',sans-serif;cursor:pointer;border-radius:8px;transition:all .3s}
+.nav-btn.active{color:var(--gold)}
+.nav-btn:hover{color:var(--gold);background:rgba(212,168,67,0.05)}
+.nav-btn-icon{font-size:20px}
+.tab-bar{display:flex;gap:8px;border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:12px}
+.tab-btn{flex:1;padding:9px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'Noto Sans SC',sans-serif;color:var(--text-dim);cursor:pointer;transition:all .3s}
+.tab-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(212,168,67,0.08)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
+.modal-overlay.active{display:flex}
+.modal-box{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;width:100%;max-width:420px;max-height:85vh;overflow-y:auto;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 40px var(--glow)}
+.modal-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.modal-header{padding:15px 20px;border-bottom:1px solid rgba(212,168,67,0.15);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:15px;font-weight:700;color:var(--gold-light);display:flex;align-items:center;gap:8px}
+.modal-close{width:30px;height:30px;background:var(--bg-card2);border:1px solid var(--border);border-radius:50%;color:var(--text-dim);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.modal-close:hover{border-color:var(--red);color:var(--red)}
+.modal-body{padding:18px}
+.task-detail-desc{font-size:14px;color:var(--text);line-height:1.7;margin-bottom:15px}
+.task-options{display:flex;flex-direction:column;gap:9px}
+.option-btn{padding:15px;border-radius:var(--radius);font-size:14px;font-family:'Noto Sans SC',sans-serif;cursor:pointer;transition:all .3s;text-align:left;border:1.5px solid}
+.option-btn.safe{background:rgba(72,149,239,0.08);border-color:rgba(72,149,239,0.3);color:var(--text)}
+.option-btn.safe:hover{background:rgba(72,149,239,0.15);border-color:var(--blue)}
+.option-btn.risky{background:rgba(230,57,70,0.08);border-color:rgba(230,57,70,0.3);color:var(--text)}
+.option-btn.risky:hover{background:rgba(230,57,70,0.15);border-color:var(--red)}
+.option-title{font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.option-desc{font-size:12px;color:var(--text-dim)}
+.result-content{text-align:center}
+.result-emoji{font-size:60px;margin-bottom:10px;display:block}
+.result-title{font-size:21px;font-weight:700;margin-bottom:8px}
+.result-title.win{color:var(--gold-light)}
+.result-title.lose{color:var(--red)}
+.result-msg{font-size:14px;color:var(--text-dim);line-height:1.6;margin-bottom:16px}
+.result-rewards{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.result-reward-item{display:flex;align-items:center;gap:5px;padding:7px 13px;background:var(--bg-card2);border-radius:20px;font-size:14px;font-weight:600}
+.result-reward-item.positive{color:var(--green)}
+.result-reward-item.negative{color:var(--red)}
+.result-close-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--gold-dim),var(--gold));color:#0a0800;border:none;border-radius:50px;font-size:15px;font-weight:700;font-family:'Noto Sans SC',sans-serif;cursor:pointer;transition:all .3s}
+.result-close-btn:hover{box-shadow:0 4px 16px rgba(212,168,67,0.4)}
+.buff-get-anim{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg-card);border:2px solid var(--gold);border-radius:16px;padding:22px 30px;text-align:center;z-index:300;box-shadow:0 0 40px rgba(212,168,67,0.5);animation:buffGet .5s ease}
+@keyframes buffGet{from{transform:translate(-50%,-50%) scale(.5);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+.buff-get-emoji{font-size:44px;display:block;margin-bottom:8px}
+.buff-get-name{font-size:17px;font-weight:700;color:var(--gold-light);margin-bottom:4px}
+.buff-get-effect{font-size:12px;color:var(--text-dim)}
+.confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:400}
+.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--bg-card);border:1px solid var(--border);color:var(--text-bright);padding:10px 20px;border-radius:25px;font-size:13px;opacity:0;transition:all .3s ease;z-index:500;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:var(--green)}
+.toast.error{border-color:var(--red)}
+.empty-state{text-align:center;padding:32px 16px;color:var(--text-dim)}
+.empty-icon{font-size:48px;margin-bottom:10px;opacity:.5}
+.empty-text{font-size:14px}
+.reset-section{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+.reset-section h3{font-size:14px;color:var(--red);margin-bottom:8px}
+.reset-section p{font-size:12px;color:var(--text-dim);margin-bottom:12px}
+.reset-btn{width:100%;padding:12px;background:rgba(230,57,70,0.1);border:1px solid rgba(230,57,70,0.3);border-radius:var(--radius-sm);font-size:13px;font-family:'Noto Sans SC',sans-serif;color:var(--red);cursor:pointer;transition:all .3s}
+.reset-btn:hover{background:rgba(230,57,70,0.2)}
+#buff-get-container{position:fixed;inset:0;pointer-events:none;z-index:300}
+@media(min-width:480px){.game-wrapper{border-left:1px solid var(--border);border-right:1px solid var(--border)}}
+</style>
+</head>
+<body>
+<canvas id="particle-canvas"></canvas>
+<div class="game-wrapper">
+
+<div id="start-screen" class="screen active">
+  <div>
+    <div class="start-glow"><span class="eye-icon">👁</span></div>
+    <h1 class="game-title">逆袭人生</h1>
+    <p class="game-subtitle">黄金瞳养成游戏</p>
+  </div>
+  <div class="golden-line"></div>
+  <div class="name-section">
+    <div class="name-label">👤 输入你的名字</div>
+    <input class="name-input" id="player-name-input" type="text" placeholder="请输入名字..." maxlength="12" autocomplete="off">
+  </div>
+  <div class="identity-section">
+    <div class="identity-label">🎭 选择你的身份</div>
+    <div class="identity-cards">
+      <div class="identity-card selected" data-identity="worker" onclick="selectIdentity(this)">
+        <div class="identity-title">💼 普通上班族</div>
+        <div class="identity-desc">月薪3000，稳定的打工生活</div>
+        <div class="identity-bonus">🎁 特性：收益波动减少，稳中求胜</div>
+      </div>
+      <div class="identity-card" data-identity="failed" onclick="selectIdentity(this)">
+        <div class="identity-title">📉 创业失败者</div>
+        <div class="identity-desc">曾亏损20万，但经验积累丰富</div>
+        <div class="identity-bonus">🎁 特性：经验+10%，初始金钱500</div>
+      </div>
+      <div class="identity-card" data-identity="student" onclick="selectIdentity(this)">
+        <div class="identity-title">🎓 家境贫寒学生</div>
+        <div class="identity-desc">身无分文，但有改变命运的决心</div>
+        <div class="identity-bonus">🎁 特性：运气+20，智慧+10，人脉-20</div>
+      </div>
+    </div>
+  </div>
+  <button class="start-btn" id="start-btn" onclick="startGame()" disabled>开始逆袭</button>
+</div>
+
+<div id="main-screen" class="screen">
+  <div class="top-bar">
+    <div class="player-info">
+      <div class="player-avatar" id="player-avatar">人</div>
+      <div class="player-name-level">
+        <div class="player-name" id="player-name-display">玩家</div>
+        <div class="player-level">
+          <span class="level-badge" id="level-badge">LV1</span>
+          <span id="level-name">打工仔</span>
+        </div>
+      </div>
+    </div>
+    <div class="exp-bar-wrap">
+      <div class="exp-label"><span>经验值</span><span id="exp-text">0/100</span></div>
+      <div class="exp-bar"><div class="exp-fill" id="exp-fill" style="width:0%"></div></div>
+    </div>
+    <button class="signin-btn" id="signin-btn" onclick="openSignin()">📅 签到</button>
+  </div>
+  <div class="main-content">
+    <div class="gold-eye-panel">
+      <div class="panel-header"><span>👁</span> 黄金瞳 - 属性面板</div>
+      <div class="panel-body">
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-label">💰 金钱</div>
+            <div class="stat-value-row"><span class="stat-value" id="stat-money">1000</span></div>
+            <div class="stat-bar"><div class="stat-bar-fill money" id="bar-money" style="width:10%"></div></div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">💎 魅力</div>
+            <div class="stat-value-row"><span class="stat-value" id="stat-charm">50</span></div>
+            <div class="stat-bar"><div class="stat-bar-fill charm" id="bar-charm" style="width:50%"></div></div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">🧠 智慧</div>
+            <div class="stat-value-row"><span class="stat-value" id="stat-wisdom">50</span></div>
+            <div class="stat-bar"><div class="stat-bar-fill wisdom" id="bar-wisdom" style="width:50%"></div></div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">👥 人脉</div>
+            <div class="stat-value-row"><span class="stat-value" id="stat-connection">30</span></div>
+            <div class="stat-bar"><div class="stat-bar-fill connection" id="bar-connection" style="width:30%"></div></div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">🍀 运气</div>
+            <div class="stat-value-row"><span class="stat-value" id="stat-luck">50</span></div>
+            <div class="stat-bar"><div class="stat-bar-fill luck" id="bar-luck" style="width:50%"></div></div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">💎 累计收益</div>
+            <div class="stat-value-row"><span class="stat-value" id="stat-total" style="font-size:17px">0</span></div>
+            <div class="stat-bar"><div class="stat-bar-fill total" id="bar-total" style="width:0%"></div></div>
+          </div>
+        </div>
+        <div class="buff-section">
+          <div class="buff-title">✨ 当前Buff（最多3个）</div>
+          <div class="buff-list" id="buff-list"><span class="no-buff">暂无Buff，完成任务获取！</span></div>
+        </div>
+      </div>
+      <div style="padding:0 16px 14px">
+        <div class="stage-section">
+          <div class="stage-info">
+            <span class="stage-emoji" id="stage-emoji">👷</span>
+            <div>
+              <div class="stage-name" id="stage-name">阶段1：打工仔</div>
+              <div class="stage-progress" id="stage-progress">下一阶段：0</div>
+              <div class="stage-bar"><div class="stage-bar-fill" id="stage-bar-fill" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tab-btn-tasks" onclick="switchTab('tasks')">📋 任务</button>
+      <button class="tab-btn" id="tab-btn-achievements" onclick="switchTab('achievements')">🏆 成就</button>
+      <button class="tab-btn" id="tab-btn-settings" onclick="switchTab('settings')">⚙️ 设置</button>
+    </div>
+
+    <div class="tab-content active" id="tab-tasks">
+      <div class="section-title-bar">
+        <div class="section-title"><span class="section-title-icon">📋</span> 今日任务</div>
+        <button class="refresh-tasks-btn" onclick="refreshTasks()">🔄 刷新</button>
+      </div>
+      <div class="tasks-list" id="tasks-list"></div>
+    </div>
+
+    <div class="tab-content" id="tab-achievements">
+      <div class="section-title-bar"><div class="section-title"><span class="section-title-icon">🏆</span> 成就系统</div></div>
+      <div class="achievements-grid" id="achievements-grid"></div>
+    </div>
+
+    <div class="tab-content" id="tab-settings">
+      <div class="section-title-bar"><div class="section-title"><span class="section-title-icon">⚙️</span> 游戏设置</div></div>
+      <div class="reset-section">
+        <h3>⚠️ 危险操作</h3>
+        <p>重置将清除所有游戏数据，包括属性、Buff、成就和任务进度，此操作不可恢复！</p>
+        <button class="reset-btn" onclick="resetGame()">🗑 确认重置游戏</button>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <button class="nav-btn" onclick="switchTab('tasks')"><span class="nav-btn-icon">📋</span><span>任务</span></button>
+    <button class="nav-btn" onclick="switchTab('achievements')"><span class="nav-btn-icon">🏆</span><span>成就</span></button>
+    <button class="nav-btn" onclick="switchTab('settings')"><span class="nav-btn-icon">⚙️</span><span>设置</span></button>
+  </div>
+</div>
+
+</div>
+
+<div class="modal-overlay" id="task-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title" id="task-modal-title">📋 任务详情</div>
+      <button class="modal-close" onclick="closeModal('task-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="task-detail-desc" id="task-modal-desc"></div>
+      <div class="task-options" id="task-options"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="result-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">🎉 任务结算</div>
+      <button class="modal-close" onclick="closeModal('result-modal')">×</button>
+    </div>
+    <div class="modal-body"><div class="result-content" id="result-content"></div></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="signin-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">📅 每日签到</div>
+      <button class="modal-close" onclick="closeModal('signin-modal')">×</button>
+    </div>
+    <div class="modal-body" id="signin-content"></div>
+  </div>
+</div>
+
+<div id="buff-get-container"></div>
+<canvas class="confetti-canvas" id="confetti-canvas"></canvas>
+<div class="toast" id="toast"></div>
+
+<script>
+const STAGES=[
+  {name:'打工仔',emoji:'👷',target:0},
+  {name:'白领精英',emoji:'👔',target:50000},
+  {name:'小老板',emoji:'🏪',target:500000},
+  {name:'公司CEO',emoji:'🏢',target:2000000},
+  {name:'商业大亨',emoji:'💎',target:5000000},
+  {name:'首富',emoji:'👑',target:10000000},
+];
+const BUFFS={
+  goldenEye:{name:'黄金瞳',emoji:'👁',rarity:'legendary',effect:'投资收益+15%'},
+  socialConn:{name:'商界人脉',emoji:'🤝',rarity:'rare',effect:'每次收益+20%'},
+  wealthFree:{name:'财富自由',emoji:'💰',rarity:'legendary',effect:'解锁高级投资'},
+  mentor:{name:'贵人相助',emoji:'🌟',rarity:'epic',effect:'随机事件成功率+30%'},
+  timeMaster:{name:'时间管理大师',emoji:'⏰',rarity:'rare',effect:'冷却时间减半'},
+  luckyStar:{name:'福星高照',emoji:'🍀',rarity:'legendary',effect:'运气+30（永久）'},
+  firstGold:{name:'第一桶金',emoji:'🪣',rarity:'epic',effect:'金钱+5000'},
+  elite:{name:'精英气质',emoji:'✨',rarity:'rare',effect:'魅力+20'},
+};
+const ACHIEVEMENTS=[
+  {id:'firstGold',name:'第一桶金',emoji:'🪣',desc:'赚到1万'},
+  {id:'ceo',name:'逆袭成功',emoji:'🏢',desc:'到达CEO阶段'},
+  {id:'forbes',name:'福布斯有你',emoji:'📰',desc:'累计赚500万'},
+  {id:'billion',name:'亿万富翁',emoji:'💫',desc:'累计赚1000万'},
+  {id:'allBuff',name:'全能王者',emoji:'🏅',desc:'集齐所有buff'},
+  {id:'winner',name:'人生赢家',emoji:'👑',desc:'达成所有条件'},
+];
+const LEVEL_EXPS=[0,100,250,500,800,1200,1700,2300,3000,4000];
+const TASK_TEMPLATES={
+  biz:[
+    {name:'商业谈判',desc:'一家大公司想和你合作，但对方态度强硬，你需要展现谈判技巧',icon:'🤝',baseReward:800,exp:15},
+    {name:'投资理财',desc:'发现一个不错的投资项目，需要决定投入多少',icon:'📈',baseReward:1200,exp:20},
+    {name:'签订合同',desc:'一笔大订单合同需要签署，内容对你有利',icon:'📄',baseReward:1500,exp:25},
+    {name:'公司会议',desc:'主持一场重要的商务会议，决定公司发展方向',icon:'🏛',baseReward:600,exp:12},
+    {name:'市场调研',desc:'调研市场需求，为新产品制定策略',icon:'🔍',baseReward:500,exp:10},
+  ],
+  social:[
+    {name:'商业应酬',desc:'参加一场高端商业酒会，结识人脉',icon:'🥂',baseReward:700,exp:14},
+    {name:'送礼社交',desc:'为重要合作伙伴准备一份贴心的礼物',icon:'🎁',baseReward:600,exp:12},
+    {name:'高端聚会',desc:'受邀参加企业家俱乐部活动',icon:'🎭',baseReward:900,exp:18},
+    {name:'媒体采访',desc:'接受财经媒体采访，提升个人影响力',icon:'🎙',baseReward:1100,exp:20},
+  ],
+  study:[
+    {name:'阅读商业书籍',desc:'研读《从零到一》，学习创业思维',icon:'📚',baseReward:400,exp:18},
+    {name:'商业课程',desc:'参加MBA总裁班课程，学习管理知识',icon:'🎓',baseReward:650,exp:22},
+    {name:'考取证书',desc:'考取高级商业分析师证书',icon:'📜',baseReward:500,exp:25},
+    {name:'行业论坛',desc:'参加行业峰会，了解最新趋势',icon:'🌐',baseReward:550,exp:15},
+  ],
+  random:[
+    {name:'捡到钱包',desc:'在路边捡到一个钱包，里面有现金和名片...',icon:'👛',baseReward:300,exp:5,random:true},
+    {name:'贵人相助',desc:'一位神秘商人主动联系你，说看好你的潜力...',icon:'🌟',baseReward:2000,exp:30,random:true},
+    {name:'突发危机',desc:'公司突然面临一场危机，你需要快速决策',icon:'⚠️',baseReward:-500,exp:10,random:true,risk:true},
+    {name:'意外机会',desc:'有人出高价想买你的创意！',icon:'💡',baseReward:1800,exp:20,random:true},
+  ],
+};
+
+let G={};
+function getDefaultState(){return{name:'',identity:'worker',money:1000,charm:50,wisdom:50,connection:30,luck:50,level:1,exp:0,totalEarnings:0,buffs:[],achievements:[],stage:0,tasks:[],lastLogin:'',lastTaskDate:'',consecutiveDays:0,completedTasks:0,socialTaskCount:0,gameStarted:true};}
+function loadGame(){try{const s=localStorage.getItem('nixiLife_v1');if(s){G=JSON.parse(s);const d=getDefaultState();for(let k in d)if(G[k]===undefined)G[k]=d[k];}else G=getDefaultState();}catch(e){G=getDefaultState();}}
+function saveGame(){try{localStorage.setItem('nixiLife_v1',JSON.stringify(G));}catch(e){}}
+
+(function initParticles(){
+  const canvas=document.getElementById('particle-canvas');
+  const ctx=canvas.getContext('2d');
+  let W,H,ps=[];
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  function spawn(){return{x:Math.random()*W,y:Math.random()*H,r:Math.random()*2+.5,vx:(Math.random()-.5)*.3,vy:-Math.random()*.5-.1,a:Math.random()*.5+.2,g:Math.random()>.3};}
+  for(let i=0;i<40;i++)ps.push(spawn());
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ps.forEach(p=>{
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.g?`rgba(240,192,96,${p.a})`:`rgba(212,168,67,${p.a*.5})`;
+      ctx.fill();
+      p.x+=p.vx;p.y+=p.vy;p.a-=.001;
+      if(p.a<=0||p.y<-5){Object.assign(p,spawn());p.y=H+5;p.a=Math.random()*.5+.2;}
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+function launchConfetti(){
+  const canvas=document.getElementById('confetti-canvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const colors=['#d4a843','#f0c060','#ffe066','#e63946','#52b788','#4895ef','#e040fb'];
+  const pcs=[];
+  for(let i=0;i<120;i++)pcs.push({x:Math.random()*canvas.width,y:-10-Math.random()*200,w:Math.random()*8+4,h:Math.random()*6+2,color:colors[Math.floor(Math.random()*colors.length)],vx:(Math.random()-.5)*4,vy:Math.random()*3+2,rot:Math.random()*360,rotV:(Math.random()-.5)*8,alpha:1});
+  let frame=0;
+  function drawC(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pcs.forEach(p=>{
+      ctx.save();ctx.globalAlpha=p.alpha;ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);ctx.fillStyle=p.color;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();
+      p.x+=p.vx;p.y+=p.vy;p.rot+=p.rotV;p.vy+=.05;p.alpha-=.008;
+    });
+    frame++;
+    if(frame<150&&pcs.some(p=>p.alpha>0))requestAnimationFrame(drawC);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  drawC();
+}
+
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show'+(type==='success'?' success':type==='error'?' error':'');
+  setTimeout(()=>t.className='toast',2500);
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+const nameInput=document.getElementById('player-name-input');
+const startBtn=document.getElementById('start-btn');
+nameInput.addEventListener('input',()=>{startBtn.disabled=nameInput.value.trim().length===0;});
+
+function selectIdentity(el){
+  document.querySelectorAll('.identity-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  G.identity=el.dataset.identity;
+}
+
+function startGame(){
+  const name=nameInput.value.trim();
+  if(!name){showToast('请输入名字！','error');return;}
+  G.name=name;
+  switch(G.identity){
+    case'worker':break;
+    case'failed':G.money=500;G.wisdom+=10;break;
+    case'student':G.luck+=20;G.wisdom+=10;G.connection=Math.max(10,G.connection-20);break;
+  }
+  generateDailyTasks();
+  G.lastLogin=getTodayStr();
+  G.lastTaskDate=getTodayStr();
+  saveGame();
+  updateAllUI();
+  showScreen('main-screen');
+}
+
+function getTodayStr(){
+  const d=new Date();
+  return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function getYesterdayStr(){
+  const d=new Date();d.setDate(d.getDate()-1);
+  return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function generateDailyTasks(){
+  const today=getTodayStr();
+  if(G.lastTaskDate===today&&G.tasks.length===3)return;
+  const types=['biz','biz','social','study','random'];
+  const shuffled=types.sort(()=>Math.random()-.5);
+  G.tasks=shuffled.slice(0,3).map((type,i)=>{
+    const templates=TASK_TEMPLATES[type];
+    const tpl=templates[Math.floor(Math.random()*templates.length)];
+    return{...tpl,type,id:today+'_'+i,completed:false};
+  });
+  G.lastTaskDate=today;
+  saveGame();
+}
+
+function refreshTasks(){
+  const today=getTodayStr();
+  const types=['biz','biz','social','study','random'];
+  const shuffled=types.sort(()=>Math.random()-.5);
+  G.tasks=shuffled.slice(0,3).map((type,i)=>{
+    const templates=TASK_TEMPLATES[type];
+    const tpl=templates[Math.floor(Math.random()*templates.length)];
+    return{...tpl,type,id:today+'_'+i,completed:false};
+  });
+  G.lastTaskDate=today;
+  renderTasks();
+  showToast('任务已刷新！');
+}
+
+function getTaskTypeLabel(type){
+  const m={biz:'商业',social:'社交',study:'学习',random:'随机'};
+  return m[type]||type;
+}
+
+function renderTasks(){
+  const list=document.getElementById('tasks-list');
+  if(!list)return;
+  if(G.tasks.length===0){
+    list.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">暂无任务</div></div>';
+    return;
+  }
+  list.innerHTML=G.tasks.map(task=>`
+    <div class="task-card ${task.type} ${task.completed?'completed':''}" ${task.completed?'':'onclick="openTask(\''+task.id+'\')'"}>
+      <div class="task-header">
+        <span class="task-icon">${task.icon}</span>
+        <div class="task-info">
+          <div class="task-name">${task.name}</div>
+          <div class="task-desc">${task.desc}</div>
+          <div class="task-rewards">
+            <span class="task-reward">💰 ${task.baseReward>0?'+'+(task.baseReward):task.baseReward}</span>
+            <span class="task-reward">✨ +${task.exp}EXP</span>
+          </div>
+          ${task.completed?'<div class="task-status">✅ 已完成</div>':''}
+        </div>
+        <span class="task-type-tag ${task.type}">${getTaskTypeLabel(task.type)}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openTask(taskId){
+  const task=G.tasks.find(t=>t.id===taskId);
+  if(!task)return;
+  document.getElementById('task-modal-title').textContent=`${task.icon} ${task.name}`;
+  document.getElementById('task-modal-desc').textContent=task.desc;
+  const optionsHTML=`
+    <div class="option-btn safe" onclick="executeTask('${task.id}',false)">
+      <div class="option-title">🛡 稳妥路线</div>
+      <div class="option-desc">低风险，获得${Math.round(task.baseReward*.6)}~${Math.round(task.baseReward*.9)}金币</div>
+    </div>
+    <div class="option-btn risky" onclick="executeTask('${task.id}',true)">
+      <div class="option-title">⚔ 赌一把</div>
+      <div class="option-desc">高风险高回报，可能血本无归或大赚一笔！</div>
+    </div>`;
+  document.getElementById('task-options').innerHTML=optionsHTML;
+  document.getElementById('task-modal').classList.add('active');
+}
+
+function executeTask(taskId,risky){
+  const task=G.tasks.find(t=>t.id===taskId);
+  if(!task)return;
+  closeModal('task-modal');
+  const has=b=>G.buffs.includes(b);
+  const luckRoll=(Math.random()*100)+(G.luck/5)+(has('luckyStar')?15:0);
+  const wisBonus=G.wisdom/200;
+  const chaBonus=G.charm/400;
+  let successRate=55+(wisBonus*30)+(chaBonus*15)+(G.level*2);
+  if(task.random&&task.risk)successRate=risky?35:65;
+  else if(task.random)successRate=risky?45:70;
+  else successRate=risky?successRate-20:successRate+15;
+  if(has('mentor')&&task.random)successRate+=15;
+  const success=luckRoll<successRate;
+  let reward=task.baseReward;
+  if(success){
+    if(has('goldenEye')&&task.type==='biz')reward*=1.15;
+    if(has('socialConn'))reward*=1.2;
+    if(has('wealthFree')&&reward>0)reward*=1.1;
+    reward=risky?reward*(1.5+Math.random()):reward*(0.8+Math.random()*.3);
+    if(G.identity==='worker'&&risky)reward*=.9;
+    if(G.identity==='failed')reward*=1.05;
+  } else {
+    reward=risky?task.baseReward*.5:task.baseReward*.1;
+  }
+  const moneyChange=Math.round(reward);
+  let expGain=(task.exp||5);
+  if(G.identity==='failed')expGain=Math.round(expGain*1.1);
+  const msg=success?(task.random?'你把握住了机会！':'任务圆满完成！'):'任务失败了，但积累了经验...';
+  G.money=Math.max(0,G.money+moneyChange);
+  if(moneyChange>0)G.totalEarnings+=moneyChange;
+  G.exp+=expGain;
+  levelUpCheck();
+  task.completed=true;
+  G.completedTasks++;
+  if(task.type==='social')G.socialTaskCount++;
+  checkAndUnlockBuffs();
+  checkAchievements();
+  updateStage();
+  saveGame();
+  if(moneyChange!==0)flashStat('money',moneyChange>0);
+  showResult(task,success,moneyChange,expGain,msg);
+  renderTasks();
+  updateAllUI();
+}
+
+function flashStat(stat,positive){
+  const el=document.getElementById('stat-'+stat);
+  if(!el)return;
+  el.classList.remove('changing','flash-up','flash-down');
+  void el.offsetWidth;
+  el.classList.add('changing',positive?'flash-up':'flash-down');
+  setTimeout(()=>el.classList.remove('changing','flash-up','flash-down'),600);
+}
+
+function levelUpCheck(){
+  while(G.level<10&&G.exp>=LEVEL_EXPS[G.level]){
+    G.level++;
+    showToast(`🎉 升级！当前等级 Lv.${G.level}`,'success');
+    launchConfetti();
+  }
+}
+
+function checkAndUnlockBuffs(){
+  const has=b=>G.buffs.includes(b);
+  const add=(id)=>{
+    if(!has(id)&&G.buffs.length<3){
+      G.buffs.push(id);
+      const b=BUFFS[id];
+      if(b)showBuffGet(b.emoji,b.name,b.effect);
+    }
+  };
+  if(G.completedTasks>=1&&!has('goldenEye'))add('goldenEye');
+  if(G.socialTaskCount>=3&&!has('socialConn'))add('socialConn');
+  if(G.totalEarnings>=100000&&!has('wealthFree'))add('wealthFree');
+  if(G.completedTasks>=10&&!has('timeMaster'))add('timeMaster');
+  if(G.totalEarnings>=10000&&!has('firstGold')){add('firstGold');G.money+=5000;}
+  if(G.stage>=3&&!has('elite')){add('elite');G.charm=Math.min(100,G.charm+20);}
+}
+
+function updateStage(){
+  const earnings=G.totalEarnings;
+  let newStage=0;
+  for(let i=STAGES.length-1;i>=0;i--)if(earnings>=STAGES[i].target){newStage=i;break;}
+  if(newStage>G.stage){
+    G.stage=newStage;
+    showToast(`🏆 恭喜晋升：${STAGES[newStage].name}！`,'success');
+    launchConfetti();
+  }
+}
+
+function checkAchievements(){
+  const has=id=>G.achievements.includes(id);
+  const unlock=id=>{
+    if(!has(id)){
+      G.achievements.push(id);
+      const ach=ACHIEVEMENTS.find(a=>a.id===id);
+      if(ach){showToast(`🏆 成就解锁：${ach.name}！`,'success');launchConfetti();}
+    }
+  };
+  if(G.totalEarnings>=10000)unlock('firstGold');
+  if(G.stage>=3)unlock('ceo');
+  if(G.totalEarnings>=5000000)unlock('forbes');
+  if(G.totalEarnings>=10000000)unlock('billion');
+  const allBuffIds=Object.keys(BUFFS).filter(id=>!['luckyStar'].includes(id));
+  if(allBuffIds.every(id=>G.buffs.includes(id)))unlock('allBuff');
+  if(has('firstGold')&&has('ceo')&&has('forbes')&&has('allBuff'))unlock('winner');
+}
+
+function renderAchievements(){
+  const grid=document.getElementById('achievements-grid');
+  if(!grid)return;
+  grid.innerHTML=ACHIEVEMENTS.map(ach=>{
+    const unlocked=hasAch=>(typeof hasAch==='boolean'?G.achievements.includes(ach.id):G.achievements.includes(ach.id));
+    const u=G.achievements.includes(ach.id);
+    return`<div class="achievement-card ${u?'unlocked':'locked'}">
+      <div class="achievement-icon">${ach.emoji}</div>
+      <div class="achievement-name">${ach.name}</div>
+      <div class="achievement-desc">${ach.desc}</div>
+    </div>`;
+  }).join('');
+}
+
+function openSignin(){
+  const today=getTodayStr();
+  const content=document.getElementById('signin-content');
+  if(G.lastLogin===today){
+    content.innerHTML=`<div style="text-align:center">
+      <div style="font-size:48px;margin-bottom:8px;">✅</div>
+      <div style="font-size:18px;font-weight:700;color:var(--gold-light)">今日已签到</div>
+      <div style="font-size:13px;color:var(--text-dim);margin-top:8px;">连续签到 <strong style="color:var(--gold)">${G.consecutiveDays}</strong> 天</div>
+    </div>`;
+  }else{
+    const yesterday=getYesterdayStr();
+    G.consecutiveDays=(G.lastLogin===yesterday)?G.consecutiveDays+1:1;
+    const reward=G.consecutiveDays*100;
+    G.money+=reward;
+    G.lastLogin=today;
+    let bonusText='';
+    if(G.consecutiveDays===7){
+      if(!G.buffs.includes('luckyStar')&&G.buffs.length<3){
+        G.buffs.push('luckyStar');G.luck=Math.min(100,G.luck+30);
+        bonusText='<div style="margin-top:10px;padding:8px;background:rgba(255,215,0,0.1);border-radius:8px;color:var(--gold-bright);font-size:13px;">🍀 获得永久Buff「福星高照」！运气+30</div>';
+      }else{bonusText='<div style="margin-top:8px;font-size:12px;color:var(--text-dim);">（已拥有福星高照）</div>';}
+    }
+    content.innerHTML=`<div style="text-align:center">
+      <div style="font-size:48px;margin-bottom:8px;">🎁</div>
+      <div style="font-size:18px;font-weight:700;color:var(--gold-light)">签到成功！</div>
+      <div style="font-size:13px;color:var(--text-dim);margin-top:8px;">连续签到 <strong style="color:var(--gold)">${G.consecutiveDays}</strong> 天</div>
+      <div style="font-size:20px;font-weight:700;color:var(--green);margin-top:8px;">+${reward} 💰</div>
+      ${bonusText}
+      <div style="margin-top:14px;font-size:12px;color:var(--text-dim);">明天继续签到可获得 <strong style="color:var(--gold)">${(G.consecutiveDays+1)*100}</strong> 金币</div>
+    </div>
+    <button class="result-close-btn" onclick="closeModal('signin-modal');saveGame();updateAllUI();" style="margin-top:16px;">确定</button>`;
+    launchConfetti();
+  }
+  saveGame();
+  updateAllUI();
+  document.getElementById('signin-modal').classList.add('active');
+}
+
+function showResult(task,success,moneyChange,expGain,msg){
+  const content=document.getElementById('result-content');
+  const emoji=success?(task.random?(task.baseReward>1000?'🌟':'💫'):'🎉'):'😔';
+  const titleClass=success?'win':'lose';
+  let rHTML='';
+  if(moneyChange!==0)rHTML+=`<div class="result-reward-item ${moneyChange>0?'positive':'negative'}">${moneyChange>0?'⬆️':'⬇️'} ${moneyChange>0?'+':''}${moneyChange} 💰</div>`;
+  if(expGain>0)rHTML+=`<div class="result-reward-item positive">⬆️ +${expGain} ✨EXP</div>`;
+  content.innerHTML=`<span class="result-emoji">${emoji}</span>
+    <div class="result-title ${titleClass}">${success?'任务成功！':'任务失败'}</div>
+    <div class="result-msg">${msg}</div>
+    <div class="result-rewards">${rHTML}</div>
+    <button class="result-close-btn" onclick="closeModal('result-modal')">继续</button>`;
+  document.getElementById('result-modal').classList.add('active');
+  if(success)launchConfetti();
+}
+
+function showBuffGet(emoji,name,effect){
+  const container=document.getElementById('buff-get-container');
+  const div=document.createElement('div');
+  div.className='buff-get-anim';
+  div.innerHTML=`<span class="buff-get-emoji">${emoji}</span><div class="buff-get-name">${name}</div><div class="buff-get-effect">${effect}</div>`;
+  container.appendChild(div);
+  setTimeout(()=>{div.style.transition='all .3s';div.style.opacity='0';div.style.transform='translate(-50%,-50%) scale(.5)';setTimeout(()=>div.remove(),300);},2000);
+}
+
+function closeModal(id){document.getElementById(id).classList.remove('active');}
+document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('active');});});
+
+function resetGame(){
+  localStorage.removeItem('nixiLife_v1');
+  G=getDefaultState();
+  closeModal('reset-modal');
+  showScreen('start-screen');
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  const btn=document.getElementById('tab-btn-'+tab);
+  if(btn)btn.classList.add('active');
+}
+
+function updateAllUI(){
+  if(!G.name)return;
+  document.getElementById('player-avatar').textContent=G.name[0];
+  document.getElementById('player-name-display').textContent=G.name;
+  document.getElementById('level-badge').textContent='LV'+G.level;
+  const nextExp=LEVEL_EXPS[G.level]||4000;
+  const prevExp=LEVEL_EXPS[G.level-1]||0;
+  const expPct=Math.min(100,((G.exp-prevExp)/(nextExp-prevExp))*100);
+  document.getElementById('exp-fill').style.width=expPct+'%';
+  document.getElementById('exp-text').textContent=`${G.exp}/${nextExp}`;
+  document.getElementById('stat-money').textContent=G.money.toLocaleString();
+  document.getElementById('stat-charm').textContent=G.charm;
+  document.getElementById('stat-wisdom').textContent=G.wisdom;
+  document.getElementById('stat-connection').textContent=G.connection;
+  document.getElementById('stat-luck').textContent=G.luck;
+  document.getElementById('stat-total').textContent=G.totalEarnings.toLocaleString();
+  document.getElementById('bar-money').style.width=Math.min(100,(G.money/10000000)*100)+'%';
+  document.getElementById('bar-charm').style.width=G.charm+'%';
+  document.getElementById('bar-wisdom').style.width=G.wisdom+'%';
+  document.getElementById('bar-connection').style.width=G.connection+'%';
+  document.getElementById('bar-luck').style.width=G.luck+'%';
+  document.getElementById('bar-total').style.width=Math.min(100,(G.totalEarnings/10000000)*100)+'%';
+  const buffList=document.getElementById('buff-list');
+  if(G.buffs.length===0)buffList.innerHTML='<span class="no-buff">暂无Buff，完成任务获取！</span>';
+  else buffList.innerHTML=G.buffs.map(id=>{const b=BUFFS[id];if(!b)return'';return`<span class="buff-tag ${b.rarity}">${b.emoji} ${b.name}</span>`;}).join('');
+  const stage=STAGES[G.stage];
+  const nextStage=STAGES[G.stage+1];
+  document.getElementById('stage-emoji').textContent=stage.emoji;
+  document.getElementById('stage-name').textContent=`阶段${G.stage+1}：${stage.name}`;
+  document.getElementById('level-name').textContent=stage.name;
+  if(nextStage){
+    const progress=Math.min(100,((G.totalEarnings-stage.target)/(nextStage.target-stage.target))*100);
+    document.getElementById('stage-progress').textContent=`下一阶段：需${(nextStage.target-G.totalEarnings).toLocaleString()}`;
+    document.getElementById('stage-bar-fill').style.width=progress+'%';
+  }else{
+    document.getElementById('stage-progress').textContent='已到达顶峰！';
+    document.getElementById('stage-bar-fill').style.width='100%';
+  }
+  const today=getTodayStr();
+  const sb=document.getElementById('signin-btn');
+  if(G.lastLogin===today){sb.className='signin-btn signed';sb.textContent='✅ 已签到';}
+  else{sb.className='signin-btn';sb.textContent='📅 签到';}
+  generateDailyTasks();
+  renderTasks();
+  renderAchievements();
+}
+
+loadGame();
+if(G.gameStarted&&G.name){
+  const today=getTodayStr();
+  const yesterday=getYesterdayStr();
+  if(G.lastLogin&&G.lastLogin!==today&&G.lastLogin!==yesterday)G.consecutiveDays=0;
+  updateAllUI();
+  showScreen('main-screen');
+}else{showScreen('start-screen');}
+</script>
+</body>
+</html>
