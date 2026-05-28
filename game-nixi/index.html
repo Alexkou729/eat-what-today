@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=1, viewport-fit=cover">
 <title>逆袭人生 - 黄金瞳养成游戏</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,19 +24,19 @@ html,body{width:100%;height:100%;font-family:'Noto Sans SC',sans-serif;backgroun
 .golden-line{width:120px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto}
 .name-section{width:100%;text-align:left}
 .name-label{font-size:13px;color:var(--gold);margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.name-input{width:100%;padding:15px 18px;touch-action:manipulation;-webkit-appearance:none;background:var(--bg-card2);border:1.5px solid var(--border);border-radius:var(--radius);color:var(--text-bright);font-size:16px;font-family:'Noto Sans SC',sans-serif;outline:none;transition:border-color .3s,box-shadow .3s}
+.name-input{width:100%;padding:15px 18px;touch-action:manipulation;-webkit-appearance:none;-webkit-user-select:text;user-select:text;pointer-events:auto;background:var(--bg-card2);border:1.5px solid var(--border);border-radius:var(--radius);color:var(--text-bright);font-size:16px;font-family:'Noto Sans SC',sans-serif;outline:none;transition:border-color .3s,box-shadow .3s}
 .name-input:focus{border-color:var(--gold);box-shadow:0 0 20px var(--glow)}
 .name-input::placeholder{color:var(--text-dim)}
 .identity-section{width:100%;text-align:left}
 .identity-label{font-size:13px;color:var(--gold);margin-bottom:12px}
-.identity-cards{display:flex;flex-direction:column;gap:10px}
-.identity-card{background:var(--bg-card2);border:1.5px solid var(--border);border-radius:var(--radius);padding:15px;cursor:pointer;transition:all .3s;text-align:left;-webkit-tap-highlight-color:rgba(212,168,67,0.3)}
+.identity-cards{display:flex;flex-direction:column;gap:10px;touch-action:manipulation}
+.identity-card{background:var(--bg-card2);border:1.5px solid var(--border);border-radius:var(--radius);padding:15px;cursor:pointer;transition:all .3s;text-align:left;-webkit-tap-highlight-color:rgba(212,168,67,0.3);pointer-events:auto;touch-action:manipulation;-webkit-user-select:none;user-select:none}
 .identity-card:hover{border-color:var(--gold-dim);background:rgba(212,168,67,0.05)}
 .identity-card.selected{border-color:var(--gold);background:rgba(212,168,67,0.1);box-shadow:0 0 16px var(--glow)}
 .identity-title{font-size:15px;font-weight:600;color:var(--gold-light);margin-bottom:4px;display:flex;align-items:center;gap:8px}
 .identity-desc{font-size:12px;color:var(--text-dim);line-height:1.5}
 .identity-bonus{font-size:12px;color:var(--green);margin-top:5px}
-.start-btn{width:100%;padding:17px;cursor:pointer;-webkit-tap-highlight-color:transparent;background:linear-gradient(135deg,#8a6c2a,#d4a843,#f0c060);color:#0a0800;border:none;border-radius:50px;font-size:16px;font-weight:700;font-family:'Noto Sans SC',sans-serif;cursor:pointer;transition:all .3s;box-shadow:0 4px 24px rgba(212,168,67,0.3);letter-spacing:3px}
+.start-btn{width:100%;padding:17px;cursor:pointer;-webkit-tap-highlight-color:transparent;pointer-events:auto;touch-action:manipulation;-webkit-user-select:none;user-select:none;background:linear-gradient(135deg,#8a6c2a,#d4a843,#f0c060);color:#0a0800;border:none;border-radius:50px;font-size:16px;font-weight:700;font-family:'Noto Sans SC',sans-serif;cursor:pointer;transition:all .3s;box-shadow:0 4px 24px rgba(212,168,67,0.3);letter-spacing:3px}
 .start-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(212,168,67,0.5)}
 .start-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 #main-screen{padding-bottom:80px}
@@ -209,17 +209,17 @@ html,body{width:100%;height:100%;font-family:'Noto Sans SC',sans-serif;backgroun
     <div class="identity-section">
       <div class="identity-label">🎭 选择你的身份</div>
       <div class="identity-cards">
-        <div class="identity-card selected" onclick="selectIdentity(this,'worker')">
+        <div class="identity-card selected" onclick="selectIdentity(this,'worker')" ontouchstart="selectIdentity(this,'worker')">
           <div class="identity-title">💼 普通打工人</div>
           <div class="identity-desc">平凡出身，靠双手奋斗</div>
           <div class="identity-bonus">🎁 任务收益+5%</div>
         </div>
-        <div class="identity-card" onclick="selectIdentity(this,'investor')">
+        <div class="identity-card" onclick="selectIdentity(this,'investor')" ontouchstart="selectIdentity(this,'investor')">
           <div class="identity-title">📈 投资达人</div>
           <div class="identity-desc">金融背景，洞察商机</div>
           <div class="identity-bonus">🎁 智慧+15，人脉+10</div>
         </div>
-        <div class="identity-card" onclick="selectIdentity(this,'failed')">
+        <div class="identity-card" onclick="selectIdentity(this,'failed')" ontouchstart="selectIdentity(this,'failed')">
           <div class="identity-title">🔥 逆袭者</div>
           <div class="identity-desc">曾经历失败，绝地翻盘</div>
           <div class="identity-bonus">🎁 全属性+10，任务经验+10%</div>
