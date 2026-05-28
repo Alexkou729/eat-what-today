@@ -245,8 +245,14 @@ html,body{width:100%;height:100%;font-family:'Noto Sans SC',sans-serif;backgroun
       <button class="signin-btn" id="signin-btn" onclick="openSignin()">📅 签到</button>
     </div>
 
-    <div class="main-content">
-      <div class="gold-eye-panel">
+    <div class="tab-bar" style="margin:16px 16px 0 16px;padding-bottom:0;">
+        <button class="tab-btn active" id="tab-btn-stats" onclick="switchTab('stats')">👁️ 属性</button>
+        <button class="tab-btn" id="tab-btn-tasks" onclick="switchTab('tasks')">📋 任务</button>
+        <button class="tab-btn" id="tab-btn-achieve" onclick="switchTab('achieve')">🏆 成就</button>
+      </div>
+      <div id="tab-stats" class="tab-content active">
+        <div class="main-content">
+        <div class="gold-eye-panel">
         <div class="panel-header">👁️ 黄金瞳属性面板</div>
         <div class="panel-body">
           <div class="stats-grid">
@@ -273,20 +279,34 @@ html,body{width:100%;height:100%;font-family:'Noto Sans SC',sans-serif;backgroun
           </div>
         </div>
       </div>
+      </div>
 
-      <div class="tasks-section">
+      <div id="tab-tasks" class="tab-content">
+        <div class="main-content">
+        <div class="tasks-section">
         <div class="section-title-bar">
           <div class="section-title"><span class="section-title-icon">📋</span> 每日任务</div>
           <button class="refresh-tasks-btn" onclick="refreshTasks()">🔄 刷新</button>
         </div>
         <div class="tasks-list" id="tasks-list"></div>
       </div>
-    </div>
+      </div>
+      </div>
+
+      <div id="tab-achieve" class="tab-content">
+        <div class="main-content">
+          <div class="section-title-bar">
+            <div class="section-title"><span class="section-title-icon">🏆</span> 成就中心</div>
+          </div>
+          <div class="achievements-grid" id="achievements-grid"></div>
+        </div>
+      </div>
 
     <div class="bottom-nav">
-      <button class="nav-btn active" onclick="switchTab('stats')"><span class="nav-btn-icon">👁️</span>属性</button>
-      <button class="nav-btn" onclick="switchTab('tasks')"><span class="nav-btn-icon">📋</span>任务</button>
-      <button class="nav-btn" onclick="switchTab('achieve')"><span class="nav-btn-icon">🏆</span>成就</button>
+      <button class="nav-btn active" id="nav-btn-stats" onclick="switchTab('stats')"><span class="nav-btn-icon">👁️</span>属性</button>
+      <button class="nav-btn" id="nav-btn-tasks" onclick="switchTab('tasks')"><span class="nav-btn-icon">📋</span>任务</button>
+      <button class="nav-btn" id="nav-btn-achieve" onclick="switchTab('achieve')"><span class="nav-btn-icon">🏆</span>成就</button>
+    </div>ve')"><span class="nav-btn-icon">🏆</span>成就</button>
       <button class="nav-btn" onclick="openModal('reset-modal')"><span class="nav-btn-icon">⚙️</span>设置</button>
     </div>
   </div>
@@ -391,7 +411,7 @@ function closeModal(id){document.getElementById(id).classList.remove('active')}
 document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('active')})});
 function resetGame(){localStorage.removeItem('nixiLife_v1');G=getDefaultState();closeModal('reset-modal');showScreen('start-screen')}
 function switchTab(tab){document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.getElementById('tab-'+tab).classList.add('active');document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));const btn=document.getElementById('tab-btn-'+tab);if(btn)btn.classList.add('active')}
-function updateAllUI(){if(!G.name)return;document.getElementById('player-avatar').textContent=G.name[0];document.getElementById('player-name-display').textContent=G.name;document.getElementById('level-badge').textContent='LV'+G.level;const nextExp=LEVEL_EXPS[G.level]||4000;const prevExp=LEVEL_EXPS[G.level-1]||0;const expPct=Math.min(100,((G.exp-prevExp)/(nextExp-prevExp))*100);document.getElementById('exp-fill').style.width=expPct+'%';document.getElementById('exp-text').textContent=`${G.exp}/${nextExp}`;document.getElementById('stat-money').textContent=G.money.toLocaleString();document.getElementById('stat-charm').textContent=G.charm;document.getElementById('stat-wisdom').textContent=G.wisdom;document.getElementById('stat-connection').textContent=G.connection;document.getElementById('stat-luck').textContent=G.luck;document.getElementById('stat-total').textContent=G.totalEarnings.toLocaleString();document.getElementById('bar-money').style.width=Math.min(100,(G.money/10000000)*100)+'%';document.getElementById('bar-charm').style.width=G.charm+'%';document.getElementById('bar-wisdom').style.width=G.wisdom+'%';document.getElementById('bar-connection').style.width=G.connection+'%';document.getElementById('bar-luck').style.width=G.luck+'%';document.getElementById('bar-total').style.width=Math.min(100,(G.totalEarnings/10000000)*100)+'%';const buffList=document.getElementById('buff-list');if(G.buffs.length===0)buffList.innerHTML='<span class="no-buff">暂无Buff，完成任务获取！</span>';else buffList.innerHTML=G.buffs.map(id=>{const b=BUFFS[id];if(!b)return'';return`<span class="buff-tag ${b.rarity}">${b.emoji} ${b.name}</span>`}).join('');const stage=STAGES[G.stage];const nextStage=STAGES[G.stage+1];document.getElementById('stage-emoji').textContent=stage.emoji;document.getElementById('stage-name').textContent=`阶段${G.stage+1}：${stage.name}`;document.getElementById('level-name').textContent=stage.name;if(nextStage){const progress=Math.min(100,((G.totalEarnings-stage.target)/(nextStage.target-stage.target))*100);document.getElementById('stage-progress').textContent=`下一阶段：需${(nextStage.target-G.totalEarnings).toLocaleString()}`;document.getElementById('stage-bar-fill').style.width=progress+'%'}else{document.getElementById('stage-progress').textContent='已到达顶峰！';document.getElementById('stage-bar-fill').style.width='100%'}const today=getTodayStr();const sb=document.getElementById('signin-btn');if(G.lastLogin===today){sb.className='signin-btn signed';sb.textContent='✅ 已签到'}else{sb.className='signin-btn';sb.textContent='📅 签到'}generateDailyTasks();renderTasks();renderAchievements()}
+function updateAllUI(){if(!G.name)return;document.getElementById('player-avatar').textContent=G.name[0];document.getElementById('player-name-display').textContent=G.name;document.getElementById('level-badge').textContent='LV'+G.level;const nextExp=LEVEL_EXPS[G.level]||4000;const prevExp=LEVEL_EXPS[G.level-1]||0;const expPct=Math.min(100,((G.exp-prevExp)/(nextExp-prevExp))*100);document.getElementById('exp-fill').style.width=expPct+'%';document.getElementById('exp-text').textContent=`${G.exp}/${nextExp}`;document.getElementById('stat-money').textContent=G.money.toLocaleString();document.getElementById('stat-charm').textContent=G.charm;document.getElementById('stat-wisdom').textContent=G.wisdom;document.getElementById('stat-connection').textContent=G.connection;document.getElementById('stat-luck').textContent=G.luck;document.getElementById('stat-total').textContent=G.totalEarnings.toLocaleString();document.getElementById('bar-money').style.width=Math.min(100,(G.money/10000000)*100)+'%';document.getElementById('bar-charm').style.width=G.charm+'%';document.getElementById('bar-wisdom').style.width=G.wisdom+'%';document.getElementById('bar-connection').style.width=G.connection+'%';document.getElementById('bar-luck').style.width=G.luck+'%';document.getElementById('bar-total').style.width=Math.min(100,(G.totalEarnings/10000000)*100)+'%';const buffList=document.getElementById('buff-list');if(G.buffs.length===0)buffList.innerHTML='<span class="no-buff">暂无Buff，完成任务获取！</span>';else buffList.innerHTML=G.buffs.map(id=>{const b=BUFFS[id];if(!b)return'';return`<span class="buff-tag ${b.rarity}">${b.emoji} ${b.name}</span>`}).join('');const stage=STAGES[G.stage];const nextStage=STAGES[G.stage+1];document.getElementById('stage-emoji').textContent=stage.emoji;document.getElementById('stage-name').textContent=`阶段${G.stage+1}：${stage.name}`;if(nextStage){const progress=Math.min(100,((G.totalEarnings-stage.target)/(nextStage.target-stage.target))*100);document.getElementById('stage-progress').textContent=`下一阶段：需${(nextStage.target-G.totalEarnings).toLocaleString()}`;document.getElementById('stage-bar-fill').style.width=progress+'%'}else{document.getElementById('stage-progress').textContent='已到达顶峰！';document.getElementById('stage-bar-fill').style.width='100%'}const today=getTodayStr();const sb=document.getElementById('signin-btn');if(G.lastLogin===today){sb.className='signin-btn signed';sb.textContent='✅ 已签到'}else{sb.className='signin-btn';sb.textContent='📅 签到'}generateDailyTasks();renderTasks();renderAchievements()}
 loadGame();if(G.gameStarted&&G.name){const today=getTodayStr();const yesterday=getYesterdayStr();if(G.lastLogin&&G.lastLogin!==today&&G.lastLogin!==yesterday)G.consecutiveDays=0;updateAllUI();showScreen('main-screen')}else{showScreen('start-screen')}
 </script>
 </body>
