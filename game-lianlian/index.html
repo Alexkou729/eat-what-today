@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>美食连连看 - 今日吃什么</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff8f0;--bg-card:#fff;--bg-header:linear-gradient(135deg,#ff7e5f,#feb47b);--orange:#ff7e5f;--orange-light:#ff9966;--orange-dark:#e65c3a;--green:#52b788;--gold:#ffc107;--text:#4a3728;--text-dim:#8b7355;--shadow:0 4px 20px rgba(255,126,95,0.2);--radius:16px;--radius-sm:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+.game-container{max-width:520px;margin:0 auto;min-height:100vh;padding-bottom:90px}
+.header{background:var(--bg-header);padding:20px 16px 16px;color:#fff;text-align:center;position:sticky;top:0;z-index:50;border-radius:0 0 24px 24px;box-shadow:0 4px 20px rgba(255,126,95,0.3)}
+.header-title{font-size:22px;font-weight:900;margin-bottom:12px;letter-spacing:2px;text-shadow:0 2px 4px rgba(0,0,0,0.1)}
+.stats-row{display:flex;justify-content:space-around;gap:12px}
+.stat-box{background:rgba(255,255,255,0.25);backdrop-filter:blur(8px);border-radius:var(--radius-sm);padding:10px 16px;flex:1;text-align:center}
+.stat-value{font-size:22px;font-weight:900;text-shadow:0 1px 2px rgba(0,0,0,0.1)}
+.stat-label{font-size:11px;opacity:0.9;margin-top:2px}
+.mode-toggle{display:flex;gap:8px;margin-top:12px;justify-content:center}
+.mode-btn{padding:8px 20px;border-radius:20px;border:none;font-size:13px;font-weight:600;font-family:'Noto Sans SC',sans-serif;cursor:pointer;background:rgba(255,255,255,0.3);color:#fff;transition:all .3s}
+.mode-btn.active{background:#fff;color:var(--orange)}
+.game-board{padding:16px;display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-top:8px}
+.tile{aspect-ratio:1;background:var(--bg-card);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;transition:all .15s;box-shadow:0 2px 8px rgba(0,0,0,0.08);border:2px solid transparent;position:relative;overflow:hidden}
+.tile:hover:not(.empty):not(.selected){transform:scale(1.05);box-shadow:0 4px 16px rgba(255,126,95,0.3)}
+.tile.selected{border-color:var(--orange);background:linear-gradient(135deg,#fff0eb,#ffe0d6);transform:scale(1.08);box-shadow:0 4px 20px rgba(255,126,95,0.4)}
+.tile.empty{background:transparent;box-shadow:none;cursor:default}
+.tile.matched{animation:matchPop .4s ease forwards}
+@keyframes matchPop{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(0);opacity:0}}
+.tile.hint{border-color:var(--green);animation:hintPulse .8s ease infinite}
+@keyframes hintPulse{0%,100%{box-shadow:0 0 0 0 rgba(82,183,136,0.4)}50%{box-shadow:0 0 0 8px rgba(82,183,136,0)}}
+.connect-line{position:fixed;pointer-events:none;z-index:100}
+.connect-line line{stroke:var(--orange);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.connect-line rect{fill:var(--orange)}
+.props-bar{display:flex;gap:10px;padding:12px 16px;justify-content:center;flex-wrap:wrap}
+.prop-btn{padding:10px 16px;background:var(--bg-card);border:2px solid rgba(255,126,95,0.2);border-radius:30px;font-size:13px;font-weight:600;cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:6px;color:var(--text)}
+.prop-btn:hover:not(:disabled){border-color:var(--orange);transform:translateY(-2px);box-shadow:var(--shadow)}
+.prop-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.prop-icon{font-size:18px}
+.combo-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);z-index:200;background:var(--bg-card);border:3px solid var(--orange);border-radius:20px;padding:20px 30px;text-align:center;pointer-events:none;box-shadow:0 10px 40px rgba(255,126,95,0.4)}
+.combo-popup.show{animation:comboShow .8s ease forwards}
+@keyframes comboShow{0%{transform:translate(-50%,-50%) scale(0)}50%{transform:translate(-50%,-50%) scale(1.1)}100%{transform:translate(-50%,-50%) scale(0);opacity:0}}
+.combo-emoji{font-size:48px;margin-bottom:8px}
+.combo-text{font-size:20px;font-weight:900;color:var(--orange)}
+.reward-banner{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:300;display:none;align-items:center;justify-content:center;padding:16px}
+.reward-banner.show{display:flex}
+.reward-card{background:var(--bg-card);border-radius:24px;padding:30px;max-width:340px;width:100%;text-align:center;animation:rewardSlide .5s ease}
+@keyframes rewardSlide{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
+.reward-title{font-size:24px;font-weight:900;color:var(--orange);margin-bottom:16px}
+.reward-code{background:linear-gradient(135deg,#fff0eb,#ffe0d6);padding:16px 24px;border-radius:12px;font-size:20px;font-weight:900;color:var(--orange-dark);letter-spacing:4px;margin-bottom:16px;word-break:break-all}
+.reward-hint{font-size:13px;color:var(--text-dim);margin-bottom:20px}
+.reward-btn{padding:14px 32px;background:var(--bg-header);color:#fff;border:none;border-radius:30px;font-size:15px;font-weight:700;cursor:pointer;transition:all .3s;box-shadow:0 4px 16px rgba(255,126,95,0.3)}
+.reward-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(255,126,95,0.4)}
+.game-over-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:300;display:none;align-items:center;justify-content:center;padding:16px}
+.game-over-modal.show{display:flex}
+.modal-content{background:var(--bg-card);border-radius:24px;padding:30px;max-width:340px;width:100%;text-align:center}
+.modal-emoji{font-size:64px;margin-bottom:12px}
+.modal-title{font-size:22px;font-weight:900;color:var(--text);margin-bottom:8px}
+.modal-score{font-size:36px;font-weight:900;color:var(--orange);margin:12px 0}
+.modal-desc{font-size:13px;color:var(--text-dim);margin-bottom:20px}
+.modal-btn{padding:14px 32px;background:var(--bg-header);color:#fff;border:none;border-radius:30px;font-size:15px;font-weight:700;cursor:pointer;width:100%;transition:all .3s}
+.modal-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(255,126,95,0.4)}
+.start-screen{position:fixed;inset:0;background:var(--bg);z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;gap:24px}
+.start-logo{font-size:72px;animation:logoBounce 2s ease infinite}
+@keyframes logoBounce{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.start-title{font-size:32px;font-weight:900;color:var(--orange);text-shadow:0 2px 4px rgba(255,126,95,0.2)}
+.start-desc{font-size:14px;color:var(--text-dim);line-height:1.6}
+.start-btn{padding:16px 48px;background:var(--bg-header);color:#fff;border:none;border-radius:40px;font-size:18px;font-weight:700;cursor:pointer;box-shadow:0 6px 24px rgba(255,126,95,0.4);transition:all .3s;letter-spacing:2px}
+.start-btn:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(255,126,95,0.5)}
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);padding:12px 16px;display:flex;justify-content:center;gap:12px;z-index:50;max-width:520px;margin:0 auto;box-shadow:0 -4px 20px rgba(0,0,0,0.08);border-radius:20px 20px 0 0}
+.bottom-btn{padding:12px 24px;background:var(--bg-header);color:#fff;border:none;border-radius:30px;font-size:14px;font-weight:600;cursor:pointer;flex:1;transition:all .3s}
+.bottom-btn:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(255,126,95,0.3)}
+.tip-popup{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;opacity:0;transition:opacity .3s;white-space:nowrap}
+.tip-popup.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="start-screen" id="start-screen">
+  <div class="start-logo">🍜</div>
+  <div class="start-title">美食连连看</div>
+  <div class="start-desc">找出相同的食材并连接它们<br>每消除10对获得优惠券码！</div>
+  <button class="start-btn" onclick="showModeSelect()">开始游戏</button>
+</div>
+
+<div class="game-container" id="game-container" style="display:none">
+  <div class="header">
+    <div class="header-title">🍜 美食连连看</div>
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-value" id="score-value">0</div>
+        <div class="stat-label">得分</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="time-value">60</div>
+        <div class="stat-label" id="time-label">剩余秒数</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="combo-value">0</div>
+        <div class="stat-label">连击</div>
+      </div>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="mode-timed" onclick="setMode('timed')">⏱️ 限时模式</button>
+      <button class="mode-btn" id="mode-infinite" onclick="setMode('infinite')">∞ 无敌模式</button>
+    </div>
+  </div>
+
+  <div class="game-board" id="game-board"></div>
+
+  <div class="props-bar">
+    <button class="prop-btn" id="btn-shuffle" onclick="useShuffle()">
+      <span class="prop-icon">🔄</span>换一批 <span id="shuffle-count">(3)</span>
+    </button>
+    <button class="prop-btn" id="btn-hint" onclick="useHint()">
+      <span class="prop-icon">🔍</span>提示 <span id="hint-count">(2)</span>
+    </button>
+    <button class="prop-btn" id="btn-time" onclick="useTime()" style="display:none">
+      <span class="prop-icon">⏰</span>+15秒
+    </button>
+  </div>
+</div>
+
+<div class="combo-popup" id="combo-popup">
+  <div class="combo-emoji">🔥</div>
+  <div class="combo-text" id="combo-text">连击 x2!</div>
+</div>
+
+<div class="reward-banner" id="reward-banner">
+  <div class="reward-card">
+    <div class="reward-title">🎉 恭喜获得优惠券!</div>
+    <div class="reward-code" id="reward-code">EAT2024</div>
+    <div class="reward-hint">复制优惠码到「今日吃什么」小程序使用</div>
+    <button class="reward-btn" onclick="closeRewardBanner()">知道了</button>
+  </div>
+</div>
+
+<div class="game-over-modal" id="game-over-modal">
+  <div class="modal-content">
+    <div class="modal-emoji">🎉</div>
+    <div class="modal-title" id="modal-title">游戏结束!</div>
+    <div class="modal-score" id="modal-score">0</div>
+    <div class="modal-desc" id="modal-desc">太棒了!</div>
+    <button class="modal-btn" onclick="restartGame()">再来一局</button>
+  </div>
+</div>
+
+<div class="tip-popup" id="tip-popup"></div>
+
+<svg id="connect-svg" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:150"></svg>
+
+<script>
+const GRID_SIZE=8;
+const FOOD_EMOJIS=['🍕','🍔','🌮','🍜','🍝','🍱','🍣','🍦','🧁','🍰','🍩','🍪','☕','🧃','🍎','🥗'];
+let gameState={};
+const modeButtons={timed:'mode-timed',infinite:'mode-infinite'};
+const props={shuffle:3,hint:2,timeBonus:1};
+
+function getStorageKey(){return'foodlink_v1_'+gameState.mode}
+
+function loadState(){const s=localStorage.getItem(getStorageKey());if(s){gameState=JSON.parse(s)}else{gameState={score:0,combo:0,totalMatches:0,props:{...props},timer:60,timerInterval:null,gameOver:false,mode:'timed',board:[],selected:null,hintsGiven:0}}
+if(!gameState.board.length||gameState.board.length===0)initBoard()}
+
+function saveState(){localStorage.setItem(getStorageKey(),JSON.stringify(gameState))}
+
+function initBoard(){gameState.board=[];const emojis=[...FOOD_EMOJIS.slice(0,16),...FOOD_EMOJIS.slice(0,16)];for(let i=emojis.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[emojis[i],emojis[j]]=[emojis[j],emojis[i]]}
+for(let i=0;i<GRID_SIZE*GRID_SIZE;i++){gameState.board.push({emoji:emojis[i],id:i,removed:false})}
+gameState.selected=null;renderBoard()}
+
+function renderBoard(){const board=document.getElementById('game-board');board.innerHTML='';
+gameState.board.forEach((tile,i)=>{const div=document.createElement('div');div.className='tile'+(tile.removed?' empty':'');if(!tile.removed){div.textContent=tile.emoji;div.onclick=()=>selectTile(i)}
+board.appendChild(div)});
+updateUI()}
+
+function selectTile(index){if(gameState.gameOver)return;const tile=gameState.board[index];if(tile.removed)return;if(gameState.selected===null){gameState.selected=index;renderBoard()}else if(gameState.selected===index){gameState.selected=null;renderBoard()}else{const t1=gameState.board[gameState.selected];const t2=tile;if(t1.emoji===t2.emoji){const path=findPath(gameState.selected,index);if(path){handleMatch(gameState.selected,index,path)}else{gameState.selected=index;renderBoard()}}else{gameState.selected=index;renderBoard()}}}
+
+function findPath(i1,i2){const x1=i1%GRID_SIZE,y1=Math.floor(i1/GRID_SIZE);const x2=i2%GRID_SIZE,y2=Math.floor(i2/GRID_SIZE);if(x1===x2){for(let y=Math.min(y1,y2)+1;y<Math.max(y1,y2);y++){if(!gameState.board[y*GRID_SIZE+x1].removed)return null}return[{x:x1,y:y1},{x:x2,y:y2}]}
+if(y1===y2){for(let x=Math.min(x1,x2)+1;x<Math.max(x1,x2);x++){if(!gameState.board[y1*GRID_SIZE+x].removed)return null}return[{x:x1,y:y1},{x:x2,y:y2}]}
+const c1={x:x1,y:y2};const c2={x:x2,y:y1};if(canPass(c1.x,c1.y)&&canPass(c1.x,c1.y)){if(isLineClear(x1,y1,c1.x,c1.y)&&isLineClear(c1.x,c1.y,x2,y2))return[{x:x1,y:y1},c1,{x:x2,y:y2}]}
+if(canPass(c2.x,c2.y)){if(isLineClear(x1,y1,c2.x,c2.y)&&isLineClear(c2.x,c2.y,x2,y2))return[{x:x1,y:y1},c2,{x:x2,y:y2}]}
+const corners=getCorners();for(const c of corners){if(canPass(c.x,c.y)){if(isLineClear(x1,y1,c.x,c.y)&&isLineClear(c.x,c.y,x2,y2))return[{x:x1,y:y1},c,{x:x2,y:y2}]}}return null}
+
+function getCorners(){const corners=[];for(let y=0;y<GRID_SIZE;y++){for(let x=0;x<GRID_SIZE;x++){if(gameState.board[y*GRID_SIZE+x].removed)corners.push({x,y})}}return corners}
+
+function canPass(x,y){if(x<0||x>=GRID_SIZE||y<0||y>=GRID_SIZE)return true;return gameState.board[y*GRID_SIZE+x].removed}
+
+function isLineClear(x1,y1,x2,y2){if(x1===x2){const minY=Math.min(y1,y2),maxY=Math.max(y1,y2);for(let y=minY+1;y<maxY;y++){if(!gameState.board[y*GRID_SIZE+x1].removed)return false}}else if(y1===y2){const minX=Math.min(x1,x2),maxX=Math.max(x1,x2);for(let x=minX+1;x<maxX;x++){if(!gameState.board[y1*GRID_SIZE+x].removed)return false}}return true}
+
+function handleMatch(i1,i2,path){const tiles=document.querySelectorAll('.tile');const el1=tiles[i1],el2=tiles[i2];drawPath(path);setTimeout(()=>{gameState.board[i1].removed=true;gameState.board[i2].removed=true;gameState.score+=100+gameState.combo*50;gameState.combo++;gameState.totalMatches++;gameState.selected=null;if(gameState.totalMatches%10===0)showReward();if(gameState.combo>=2)showCombo();renderBoard();saveState();checkGameEnd()},200)}
+
+function drawPath(path){const svg=document.getElementById('connect-svg');svg.innerHTML='';const board=document.getElementById('game-board');const rect=board.getBoundingClientRect();const tileW=rect.width/GRID_SIZE;const tileH=tileW;path.forEach((p,i)=>{if(i<path.length-1){const next=path[i+1];const x1=p.x*tileW+tileW/2+rect.left;const y1=p.y*tileH+tileH/2+rect.top;const x2=next.x*tileW+tileW/2+rect.left;const y2=next.y*tileH+tileH/2+rect.top;if(p.x===next.x){const minY=Math.min(p.y,next.y),maxY=Math.max(p.y,next.y);const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',x1);line.setAttribute('y1',y1);line.setAttribute('x2',x2);line.setAttribute('y2',y2);svg.appendChild(line)}else{const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',x1);line.setAttribute('y1',y1);line.setAttribute('x2',x2);line.setAttribute('y2',y2);svg.appendChild(line)}}})
+setTimeout(()=>svg.innerHTML='',300)}
+
+function showCombo(){const popup=document.getElementById('combo-popup');document.getElementById('combo-text').textContent=`连击 x${gameState.combo}!`;popup.classList.add('show');setTimeout(()=>popup.classList.remove('show'),800)}
+
+function showReward(){const codes=['EAT2024A','EAT2024B','FOOD50','EATNOW','YUMMY30','DELICIOUS20'];document.getElementById('reward-code').textContent=codes[Math.floor(Math.random()*codes.length)];document.getElementById('reward-banner').classList.add('show')}
+
+function closeRewardBanner(){document.getElementById('reward-banner').classList.remove('show')}
+
+function checkGameEnd(){const remaining=gameState.board.filter(t=>!t.removed).length;if(remaining===0){endGame(true)}else if(gameState.mode==='timed'&&gameState.timer<=0){endGame(false)}}
+
+function endGame(win){gameState.gameOver=true;if(gameState.timerInterval)clearInterval(gameState.timerInterval);document.getElementById('modal-title').textContent=win?'🎊 全部消除!':'⏰ 时间到!';document.getElementById('modal-score').textContent=gameState.score;document.getElementById('modal-desc').textContent=`消除了 ${gameState.totalMatches} 对食材`;document.getElementById('game-over-modal').classList.add('show');saveState()}
+
+function updateUI(){document.getElementById('score-value').textContent=gameState.score;document.getElementById('combo-value').textContent=gameState.combo;if(gameState.mode==='timed'){document.getElementById('time-value').textContent=Math.max(0,gameState.timer);document.getElementById('btn-time').style.display=gameState.props.timeBonus>0?'inline-flex':'none';document.getElementById('btn-time').disabled=gameState.props.timeBonus<=0}else{document.getElementById('time-value').textContent='∞';document.getElementById('time-label').textContent='无尽模式'}
+document.getElementById('shuffle-count').textContent=`(${gameState.props.shuffle})`;document.getElementById('hint-count').textContent=`(${gameState.props.hint})`;document.getElementById('btn-shuffle').disabled=gameState.props.shuffle<=0;document.getElementById('btn-hint').disabled=gameState.props.hint<=0}
+
+function setMode(mode){gameState.mode=mode;document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));document.getElementById('mode-'+mode).classList.add('active');if(mode==='timed'){startTimer()}else{clearInterval(gameState.timerInterval);gameState.timerInterval=null}updateUI();saveState()}
+
+function startTimer(){if(gameState.timerInterval)clearInterval(gameState.timerInterval);gameState.timer=60;gameState.timerInterval=setInterval(()=>{gameState.timer--;updateUI();if(gameState.timer<=0){checkGameEnd()}},1000)}
+
+function useShuffle(){if(gameState.props.shuffle<=0||gameState.gameOver)return;gameState.props.shuffle--;const remaining=gameState.board.filter(t=>!t.removed);const emojis=remaining.map(t=>t.emoji);for(let i=emojis.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[emojis[i],emojis[j]]=[emojis[j],emojis[i]]}let idx=0;gameState.board.forEach(t=>{if(!t.removed)t.emoji=emojis[idx++]})
+gameState.selected=null;renderBoard();saveState();showTip('已换一批!')}
+
+function useHint(){if(gameState.props.hint<=0||gameState.gameOver)return;const hint=findHintPair();if(hint){gameState.props.hint--;renderBoard();const tiles=document.querySelectorAll('.tile');tiles[hint[0]].classList.add('hint');tiles[hint[1]].classList.add('hint');setTimeout(()=>{tiles[hint[0]].classList.remove('hint');tiles[hint[1]].classList.remove('hint')},2000);saveState()}else{showTip('没有可连接的对了!')}}
+
+function findHintPair(){for(let i=0;i<gameState.board.length;i++){if(gameState.board[i].removed)continue;for(let j=i+1;j<gameState.board.length;j++){if(gameState.board[j].removed)continue;if(gameState.board[i].emoji===gameState.board[j].emoji){if(findPath(i,j))return[i,j]}}}return null}
+
+function useTime(){if(gameState.props.timeBonus<=0||gameState.mode!=='timed'||gameState.gameOver)return;gameState.props.timeBonus--;gameState.timer+=15;updateUI();saveState();showTip('+15秒!')}
+
+function showTip(msg){const tip=document.getElementById('tip-popup');tip.textContent=msg;tip.classList.add('show');setTimeout(()=>tip.classList.remove('show'),1500)}
+
+function showModeSelect(){document.getElementById('start-screen').style.display='none';document.getElementById('game-container').style.display='block';loadState();if(gameState.mode==='timed'&&!gameState.timerInterval){startTimer()}}
+
+function restartGame(){document.getElementById('game-over-modal').classList.remove('show');gameState={score:0,combo:0,totalMatches:0,props:{...props},timer:60,timerInterval:null,gameOver:false,mode:gameState.mode,board:[],selected:null,hintsGiven:0};initBoard();if(gameState.mode==='timed'){startTimer()}else{clearInterval(gameState.timerInterval);gameState.timerInterval=null}saveState()}
+
+window.addEventListener('resize',()=>{if(document.getElementById('game-container').style.display!=='none')renderBoard()});
+</script>
+</body>
+</html>
